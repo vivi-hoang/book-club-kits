@@ -1,6 +1,7 @@
 // ./firebase/FirebaseHelpers.js
 
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/firestore';
 import { Alert } from 'react-native';
 // import { firebaseConfig } from './FirebaseCredentials';

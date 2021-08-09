@@ -1,10 +1,64 @@
 // ./components/Dashboard.js
 
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import firebase from 'firebase/app';
+import { loggingOut } from '../firebase/FirebaseHelpers';
 
+import styles from '../styling/Styles';
+
+// Destructure navigation; passed as a property to the component.
 const Dashboard = ({ navigation }) => {
+
+    // Allows ID of current sign-in user
+    let currentUserUID = firebase.auth().currentUser.uid;
+    const [firstName, setFirstName] = useState('');
+  
+    useEffect(() => {
+        // Retrieve data from Firestore using query methods in doc
+        async function getUserInfo(){
+            let doc = await firebase
+            .firestore()
+            .collection('users')
+            .doc(currentUserUID)
+            .get();
+    
+            if (!doc.exists){
+                Alert.alert('No user data found!')
+            } else {
+                // Retrieve data as key-value pair
+                let dataObj = doc.data();
+
+                console.log("Sign-in provider: " + dataObj.providerId);
+                console.log("  Provider-specific UID: " + dataObj.uid);
+                console.log("  Name: " + dataObj.displayName);
+                console.log("  Email: " + dataObj.email);
+
+                setFirstName(dataObj.firstName)
+            }
+        }
+        getUserInfo();
+    })
+  
+    const handlePress = () => {
+      loggingOut();
+      navigation.replace('Home');
+    };
+
+
+
     return (
+        
+        <View style={styles.container}>
+            <Text style={styles.titleText}>Dashboard</Text>
+            <Text style={styles.text}>Hi, {firstName}</Text>
+            <TouchableOpacity style={styles.button} onPress={handlePress}>
+                <Text style={styles.buttonText}>Log Out</Text>
+            </TouchableOpacity>
+        </View>
+
+        /*
         <View>
             <Text>This is the Dashboard page</Text>
             <Text
@@ -28,9 +82,8 @@ const Dashboard = ({ navigation }) => {
                 Go to Sign-Up screen    
             </Text>
         </View>
+        */
     );
 }
-
-const styles = StyleSheet.create({});
 
 export default Dashboard;

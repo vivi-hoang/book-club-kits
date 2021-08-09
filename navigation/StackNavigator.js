@@ -49,12 +49,12 @@ const MainStackNavigator = () => {
             <Stack.Screen 
                 name = 'Home'
                 component = { Home } 
-                //options = {{ headerShown: false }}
+                // options = {{ headerShown: false }}
             />
             <Stack.Screen
                 name = 'Sign Up'
                 component = { SignUp }
-                //options = {{ headerShown: false }}
+                // options = {{ headerShown: false }}
             />
             <Stack.Screen
                 name = 'Sign In'
