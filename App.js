@@ -1,14 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+// ./App.js
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+// DEPENDENCIES
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { StyleSheet, Text, View } from 'react-native';
+import firebase from 'firebase';
+import { firebaseConfig } from './firebase/FirebaseCredentials';
+import { MainStackNavigator } from './navigation/StackNavigator';
+
+export default function App() {   
+    
+    // Checks that Firebase app was not called anywhere else before initialization
+    if (!firebase.apps.length) {
+        console.log('Connected with Firebase')
+        firebase.initializeApp(firebaseConfig);
+    }
+    
+    return (
+        <NavigationContainer>
+            <MainStackNavigator />
+        </NavigationContainer>
+    );
 }
 
 const styles = StyleSheet.create({
