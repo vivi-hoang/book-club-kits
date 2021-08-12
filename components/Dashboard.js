@@ -1,7 +1,7 @@
 // ./components/Dashboard.js
 
 import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 import { loggingOut } from '../firebase/FirebaseHelpers';
@@ -28,14 +28,12 @@ const Dashboard = ({ navigation }) => {
                 Alert.alert('No user data found!')
             } else {
                 // Retrieve data as key-value pair
-                let dataObj = doc.data();
+                let user = doc.data();
+                console.log("Firebase UID: " + currentUserUID);
+                console.log("Name: " + user.firstName + ' ' + user.lastName);
+                console.log("Email: " + user.email);
 
-                console.log("Sign-in provider: " + dataObj.providerId);
-                console.log("  Provider-specific UID: " + dataObj.uid);
-                console.log("  Name: " + dataObj.displayName);
-                console.log("  Email: " + dataObj.email);
-
-                setFirstName(dataObj.firstName)
+                setFirstName(user.firstName)
             }
         }
         getUserInfo();

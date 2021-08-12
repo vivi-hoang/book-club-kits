@@ -6,11 +6,6 @@ import 'firebase/firestore';
 import { Alert } from 'react-native';
 // import { firebaseConfig } from './FirebaseCredentials';
 
-// Initialize database once
-// export function initFavoritesDatabase() {
-//     firebase.initializeApp(firebaseConfig);
-// }
-
 export async function registration(email, password, lastName, firstName) {
     try {
         // Create account for user; automatically assign unique UID
