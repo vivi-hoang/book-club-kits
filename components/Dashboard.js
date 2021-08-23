@@ -14,7 +14,9 @@ const Dashboard = ({ navigation }) => {
     // Allows ID of current sign-in user
     let currentUserUID = firebase.auth().currentUser.uid;
     const [firstName, setFirstName] = useState('');
+    const [userRole, setUserRole] = useState('');
   
+    // This useEffect is called every time component renders
     useEffect(() => {
         
         // isMounted addresses error "Can't perform a React state update on an unmounted component"
@@ -39,8 +41,9 @@ const Dashboard = ({ navigation }) => {
                     console.log('Name: ' + user.firstName + ' ' + user.lastName);
                     console.log('Email: ' + user.email);
                     console.log('Role: ' + user.role);
-
-                    setFirstName(user.firstName)
+                    
+                    setFirstName(user.firstName);
+                    setUserRole(user.role);
                 }
             }
         }
@@ -53,16 +56,36 @@ const Dashboard = ({ navigation }) => {
       navigation.replace('Home');
     };
 
-
+    // Display different dashboard based on user role  
+    const renderUI = (userRole) => {
+        if (userRole === 'patron') {
+            return (
+                <Text style={styles.titleText}>THIS IS THE PATRON DASHBOARD</Text>
+            );
+        } else if (userRole === 'librarian') {
+            return (
+                <Text style={styles.titleText}>THIS IS THE LIBRARIAN DASHBOARD</Text>
+            );
+        }  else if (userRole === 'admin') {
+            return (
+                <Text style={styles.titleText}>THIS IS THE ADMIN DASHBOARD</Text>
+            );
+        } else {
+            return (
+                <Text style={styles.titleText}>DASHBOARD - USER ROLE UNRECOGNIZED</Text>
+            );
+        }
+    };
 
     return (
-        
-        <View style={styles.container}>
-            <Text style={styles.titleText}>Dashboard</Text>
-            <Text style={styles.text}>Hi, {firstName}</Text>
-            <TouchableOpacity style={styles.button} onPress={handlePress}>
-                <Text style={styles.buttonText}>Log Out</Text>
-            </TouchableOpacity>
+        <View>
+            <View style={styles.container}>
+                { renderUI(userRole) }
+                <Text style={styles.text}>Hi, {firstName}</Text>
+                    <TouchableOpacity style={styles.button} onPress={handlePress}>
+                        <Text style={styles.buttonText}>Log Out</Text>
+                    </TouchableOpacity>
+                </View>            
         </View>
 
     );
