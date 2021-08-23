@@ -15,13 +15,13 @@ import Dashboard from '../components/Dashboard';
 const Stack = createStackNavigator();
 
 /* NAVIGATION ORDER
-Users will first see Landing screen.
+Users will first see Loading screen.
     They will land on Home screen if not signed in.
     They will land on Dashboard if they are signed in.
-If user doesn't have account
+If user doesn't have account:
     Sign Up button will take them to Sign Up screen.
     Once signed up, user taken to Dashboard.
-If user has an account but not signed in
+If user has an account but not signed in:
     Can use sign in button
     Once signed in, user taken to Dashboard.
 Dashboard displays user's name and Sign Out button

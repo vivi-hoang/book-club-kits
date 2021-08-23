@@ -52,32 +52,7 @@ const SignIn = ({ navigation }) => {
                 <Text style = { styles.buttonText }>Submit</Text>
             </TouchableOpacity>  
         </View>        
-        
-        /*
-        <View>
-            <Text>This is the Sign-in page</Text>
-            <Text
-                onPress = {() => navigation.push('Sign Up')}
-            >
-                Go to Sign-Up screen    
-            </Text>
-            <Text
-                onPress = {() => navigation.push('Loading')}
-            >
-                Go to Loading screen    
-            </Text>
-            <Text
-                onPress = {() => navigation.push('Home')}
-            >
-                Go to Home screen    
-            </Text>
-            <Text
-                onPress = {() => navigation.push('Dashboard')}
-            >
-                Go to Dashboard screen    
-            </Text>
-        </View>
-        */
+
     );
 }
 

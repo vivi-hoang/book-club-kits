@@ -16,27 +16,36 @@ const Dashboard = ({ navigation }) => {
     const [firstName, setFirstName] = useState('');
   
     useEffect(() => {
-        // Retrieve data from Firestore using query methods in doc
-        async function getUserInfo(){
-            let doc = await firebase
-            .firestore()
-            .collection('users')
-            .doc(currentUserUID)
-            .get();
-    
-            if (!doc.exists){
-                Alert.alert('No user data found!')
-            } else {
-                // Retrieve data as key-value pair
-                let user = doc.data();
-                console.log("Firebase UID: " + currentUserUID);
-                console.log("Name: " + user.firstName + ' ' + user.lastName);
-                console.log("Email: " + user.email);
+        
+        // isMounted addresses error "Can't perform a React state update on an unmounted component"
+        let isMounted = true;
 
-                setFirstName(user.firstName)
+        // Retrieve data from Firestore using query methods in doc
+        async function getUserInfo() {
+
+            if (isMounted) {
+                let doc = await firebase
+                .firestore()
+                .collection('users')
+                .doc(currentUserUID)
+                .get();
+        
+                if (!doc.exists){
+                    Alert.alert('No user data found!')
+                } else {
+                    // Retrieve data as key-value pair
+                    let user = doc.data();
+                    console.log('Firebase UID: ' + currentUserUID);
+                    console.log('Name: ' + user.firstName + ' ' + user.lastName);
+                    console.log('Email: ' + user.email);
+                    console.log('Role: ' + user.role);
+
+                    setFirstName(user.firstName)
+                }
             }
         }
         getUserInfo();
+        return () => { isMounted = false };
     })
   
     const handlePress = () => {
@@ -56,31 +65,6 @@ const Dashboard = ({ navigation }) => {
             </TouchableOpacity>
         </View>
 
-        /*
-        <View>
-            <Text>This is the Dashboard page</Text>
-            <Text
-                onPress = {() => navigation.push('Sign In')}
-            >
-                Go to Sign-In screen    
-            </Text>
-            <Text
-                onPress = {() => navigation.push('Loading')}
-            >
-                Go to Loading screen    
-            </Text>
-            <Text
-                onPress = {() => navigation.push('Home')}
-            >
-                Go to Home screen    
-            </Text>
-            <Text
-                onPress = {() => navigation.push('Sign Up')}
-            >
-                Go to Sign-Up screen    
-            </Text>
-        </View>
-        */
     );
 }
 

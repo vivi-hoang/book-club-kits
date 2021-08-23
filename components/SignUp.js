@@ -108,31 +108,6 @@ const SignUp = ({ navigation }) => {
             </View>
         </SafeAreaView>
 
-        /*
-        <View>
-            <Text>This is the Sign-up page</Text>
-            <Text
-                onPress = {() => navigation.push('Sign In')}
-            >
-                Go to Sign-In screen    
-            </Text>
-            <Text
-                onPress = {() => navigation.push('Loading')}
-            >
-                Go to Loading screen    
-            </Text>
-            <Text
-                onPress = {() => navigation.push('Home')}
-            >
-                Go to Home screen    
-            </Text>
-            <Text
-                onPress = {() => navigation.push('Dashboard')}
-            >
-                Go to Dashboard screen    
-            </Text>
-        </View>
-        */
     );
 }
 

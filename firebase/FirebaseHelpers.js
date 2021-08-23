@@ -12,19 +12,20 @@ export async function registration(email, password, lastName, firstName) {
         await firebase.auth().createUserWithEmailAndPassword(email, password);
         const currentUser = firebase.auth().currentUser;
         
-        // Create collection (table) called "users"
+        // Create Firestore collection (table) called "users"
         const db = firebase.firestore();
         db.collection("users")
             // Create a document (entry/instance) that contains a unique UID
             .doc(currentUser.uid)
             // Customized attribute for collection and store as key-value pair
             .set({
-            email: currentUser.email,
-            lastName: lastName,
-            firstName: firstName,
+                email: currentUser.email,
+                lastName: lastName,
+                firstName: firstName,
+                role: 'patron',
             });
     }   catch (err) {
-         Alert.alert("There is something wrong!!!!", err.message);
+         Alert.alert("There is something wrong.", err.message);
     }
 }
   
