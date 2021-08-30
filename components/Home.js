@@ -12,7 +12,7 @@ const Home = ({ navigation }) => {
         
         <View style = {styles.container}>
             <View style = {styles.titleContainer}>
-                <Text style = {styles.title}>Welcome to Firebase/Firestore Example</Text>
+                <Text style = {styles.title}>BOOK CLUB KIT RESERVATIONS</Text>
             </View>
             
             <View>

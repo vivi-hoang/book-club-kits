@@ -27,10 +27,10 @@ const Dashboard = ({ navigation }) => {
 
             if (isMounted) {
                 let doc = await firebase
-                .firestore()
-                .collection('users')
-                .doc(currentUserUID)
-                .get();
+                    .firestore()
+                    .collection('users')
+                    .doc(currentUserUID)
+                    .get();
         
                 if (!doc.exists){
                     Alert.alert('No user data found!')
@@ -62,13 +62,39 @@ const Dashboard = ({ navigation }) => {
             return (
                 <Text style={styles.titleText}>THIS IS THE PATRON DASHBOARD</Text>
             );
-        } else if (userRole === 'librarian') {
+        } else if (userRole === 'staff') {
             return (
-                <Text style={styles.titleText}>THIS IS THE LIBRARIAN DASHBOARD</Text>
+                <Text style={styles.titleText}>THIS IS THE STAFF DASHBOARD</Text>
             );
         }  else if (userRole === 'admin') {
             return (
-                <Text style={styles.titleText}>THIS IS THE ADMIN DASHBOARD</Text>
+                <View>
+                    <Text style={styles.titleText}>THIS IS THE ADMIN DASHBOARD</Text>
+                    <TouchableOpacity 
+                        style = { styles.button }
+                        onPress = {() =>
+                            navigation.navigate('User List')
+                        }
+                    >
+                        <Text style = { styles.buttonText }>Manage Users</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style = { styles.button }
+                        onPress = {() =>
+                            navigation.navigate('Collection')
+                        }
+                    >
+                        <Text style = { styles.buttonText }>Manage Collection</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style = { styles.button }
+                        onPress = {() =>
+                            navigation.navigate('Add Book')
+                        }
+                    >
+                        <Text style = { styles.buttonText }>Add Book</Text>
+                    </TouchableOpacity>
+                </View>
             );
         } else {
             return (
@@ -79,13 +105,16 @@ const Dashboard = ({ navigation }) => {
 
     return (
         <View>
-            <View style={styles.container}>
-                { renderUI(userRole) }
+            <View style = { styles.container }>
                 <Text style={styles.text}>Hi, {firstName}</Text>
-                    <TouchableOpacity style={styles.button} onPress={handlePress}>
-                        <Text style={styles.buttonText}>Log Out</Text>
-                    </TouchableOpacity>
-                </View>            
+                <TouchableOpacity 
+                    style = { styles.button }
+                    onPress={handlePress}
+                >
+                    <Text style = { styles.buttonText }>Log Out</Text>
+                </TouchableOpacity>
+                { renderUI(userRole) }
+            </View>  
         </View>
 
     );

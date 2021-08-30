@@ -6,6 +6,8 @@ import 'firebase/firestore';
 import { Alert } from 'react-native';
 // import { firebaseConfig } from './FirebaseCredentials';
 
+// Create user account for authentication
+// but also save account details (email, name and user role) to separate Firestore database ('users')
 export async function registration(email, password, lastName, firstName) {
     try {
         // Create account for user; automatically assign unique UID
@@ -25,7 +27,7 @@ export async function registration(email, password, lastName, firstName) {
                 role: 'patron',
             });
     }   catch (err) {
-         Alert.alert("There is something wrong.", err.message);
+            Alert.alert("There is something wrong.", err.message);
     }
 }
   

@@ -11,6 +11,9 @@ import Home from '../components/Home';
 import SignUp from '../components/SignUp';
 import SignIn from '../components/SignIn';
 import Dashboard from '../components/Dashboard';
+import UserList from '../components/UserList';
+import UserRecord from '../components/UserRecord';
+import AddBook from '../components/AddBook';
 
 const Stack = createStackNavigator();
 
@@ -33,7 +36,7 @@ const MainStackNavigator = () => {
             screenOptions = {{
                 headerTitleAlign: 'center',
                 headerStyle: {
-                    backgroundColor: '#3740FE', // blue
+                    backgroundColor: '#0C3E22', // dark green
                 },
                 headerTintColor: '#fff',
                 headerTitleStyle: {
@@ -64,6 +67,21 @@ const MainStackNavigator = () => {
             <Stack.Screen
                 name = 'Dashboard'
                 component = { Dashboard }
+                //options = {{ headerShown: false }}
+            />
+            <Stack.Screen
+                name = 'User List'
+                component = { UserList }
+                //options = {{ headerShown: false }}
+            />
+            <Stack.Screen
+                name = 'User Record'
+                component = { UserRecord }
+                //options = {{ headerShown: false }}
+            />
+            <Stack.Screen
+                name = 'Add Book'
+                component = { AddBook }
                 //options = {{ headerShown: false }}
             />
         </Stack.Navigator>
