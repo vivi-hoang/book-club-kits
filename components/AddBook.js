@@ -1,8 +1,8 @@
 // ./components/AddBook.js
 
 import React, { useEffect, useState } from 'react';
-import { Text, View, ActivityIndicator, FlatList } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, SafeAreaView, View, Keyboard, TextInput } from 'react-native';
+import { Button, Input  } from 'react-native-elements';
 import firebase from 'firebase/app';
 import { loggingOut } from '../firebase/FirebaseHelpers';
 
@@ -20,17 +20,37 @@ Age Group
 Kit Contents
 Location
 Synopsis
-
 */
 
 
     return (
         
-        <View style = {styles.container}>
+        <SafeAreaView style = {styles.container}>
             <View style = {styles.titleContainer}>
                 <Text style = {styles.title}>ADD BOOK FORM</Text>
             </View>
-        </View>
+            <Input
+                label = 'Title'
+            />
+            <Input
+                label = 'Author'
+            />
+            <Input
+                label = 'Genre'
+            />
+            <Input
+                label = 'Age Group'
+            />
+            <Input
+                label = 'Kit Contents'
+            />
+            <Input
+                label = 'Location'
+            />
+            <Input
+                label = 'Synopsis'
+            />
+        </SafeAreaView>
     );
 }
 

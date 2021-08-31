@@ -14,6 +14,8 @@ import Dashboard from '../components/Dashboard';
 import UserList from '../components/UserList';
 import UserRecord from '../components/UserRecord';
 import AddBook from '../components/AddBook';
+import Collection from '../components/Collection';
+import BookRecord from '../components/BookRecord';
 
 const Stack = createStackNavigator();
 
@@ -82,6 +84,16 @@ const MainStackNavigator = () => {
             <Stack.Screen
                 name = 'Add Book'
                 component = { AddBook }
+                //options = {{ headerShown: false }}
+            />
+            <Stack.Screen
+                name = 'Collection'
+                component = { Collection }
+                //options = {{ headerShown: false }}
+            />
+            <Stack.Screen
+                name = 'Book Record'
+                component = { BookRecord }
                 //options = {{ headerShown: false }}
             />
         </Stack.Navigator>
