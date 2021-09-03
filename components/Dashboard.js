@@ -57,7 +57,8 @@ const Dashboard = ({ navigation }) => {
     };
 
     // Display different dashboard based on user role  
-    const renderUI = (userRole) => {
+    
+    const renderUserType = (userRole) => {
         if (userRole === 'patron') {
             return (
                 <Text style={styles.titleText}>THIS IS THE PATRON DASHBOARD</Text>
@@ -66,39 +67,49 @@ const Dashboard = ({ navigation }) => {
             return (
                 <Text style={styles.titleText}>THIS IS THE STAFF DASHBOARD</Text>
             );
-        }  else if (userRole === 'admin') {
+        } else if (userRole === 'admin') {
+            return (
+                <Text style={styles.titleText}>THIS IS THE ADMIN DASHBOARD</Text>
+            );
+        } else {
+            return (
+                <Text style={styles.titleText}>Dashboard: User role unrecognized</Text>
+            );
+        }
+    }
+    
+    const renderStaffDashboard = (userRole) => {
+        if (userRole === 'staff' || userRole === 'admin') {
             return (
                 <View>
-                    <Text style={styles.titleText}>THIS IS THE ADMIN DASHBOARD</Text>
                     <TouchableOpacity 
                         style = { styles.button }
-                        onPress = {() =>
-                            navigation.navigate('User List')
-                        }
-                    >
-                        <Text style = { styles.buttonText }>Manage Users</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style = { styles.button }
-                        onPress = {() =>
-                            navigation.navigate('Collection')
-                        }
+                        onPress = {() => navigation.navigate('Collection')}
                     >
                         <Text style = { styles.buttonText }>Manage Collection</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style = { styles.button }
-                        onPress = {() =>
-                            navigation.navigate('Add Book')
-                        }
+                        onPress = {() => navigation.navigate('Add Book')}
                     >
                         <Text style = { styles.buttonText }>Add Book</Text>
                     </TouchableOpacity>
                 </View>
             );
-        } else {
+        }
+    };
+
+    const renderAdminDashboard = (userRole) => {
+        if (userRole === 'admin') {
             return (
-                <Text style={styles.titleText}>DASHBOARD - USER ROLE UNRECOGNIZED</Text>
+                <View>
+                    <TouchableOpacity 
+                        style = { styles.button }
+                        onPress = {() => navigation.navigate('User List')}
+                    >
+                        <Text style = { styles.buttonText }>Manage Users</Text>
+                    </TouchableOpacity>
+                </View>
             );
         }
     };
@@ -113,7 +124,9 @@ const Dashboard = ({ navigation }) => {
                 >
                     <Text style = { styles.buttonText }>Log Out</Text>
                 </TouchableOpacity>
-                { renderUI(userRole) }
+                { renderUserType(userRole) }
+                { renderStaffDashboard(userRole) }
+                { renderAdminDashboard(userRole) }
             </View>  
         </View>
 

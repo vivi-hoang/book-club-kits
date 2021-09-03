@@ -16,7 +16,7 @@ export async function registration(email, password, lastName, firstName) {
         
         // Create Firestore collection (table) called "users"
         const db = firebase.firestore();
-        db.collection("users")
+        db.collection('users')
             // Create a document (entry/instance) that contains a unique UID
             .doc(currentUser.uid)
             // Customized attribute for collection and store as key-value pair
@@ -29,6 +29,25 @@ export async function registration(email, password, lastName, firstName) {
     }   catch (err) {
             Alert.alert("There is something wrong.", err.message);
     }
+}
+
+export function storeBook(title, author, genre, ageGroup, kitContents, location, synopsis) {
+    
+    // Create Firestore collection (table) called "books"
+    const db = firebase.firestore();
+    db.collection('books')
+        // Create a document (entry/instance) for which Firestore will auto-generate an ID
+        .doc() 
+        // Pass in data entered by staff as key-value pair
+        .set({
+            title: title,
+            author: author,
+            genre: genre,
+            ageGroup: ageGroup,
+            kitContents: kitContents,
+            location: location,
+            synopsis, synopsis
+        });
 }
   
 export async function signIn(email, password) {
