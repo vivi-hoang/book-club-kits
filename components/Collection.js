@@ -4,7 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
-import { Col, Row, Grid } from "react-native-easy-grid";
+
+import BootstrapTable from 'react-bootstrap-table-next';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
 import styles from '../styling/Styles';
 
@@ -51,54 +53,73 @@ const Collection = ({ navigation }) => {
         )
     }
 
-    const renderTable = () => {
+    const renderTable = () => {                
+
+        const rowStyle = { 
+            backgroundColor: '#c8e6c9' 
+        };
+
+        const headerStyle = {
+            backgroundColor: '#6c757d',
+            color: '#ffffff',
+        };
+
+        const sortingHeaderStyle = {
+            backgroundColor: 'red'
+        };
+
+        const columns = [
+            { 
+                dataField: 'title', 
+                text: 'Title',
+                headerStyle: headerStyle,
+                sort: true, 
+            }, 
+            { 
+                dataField: 'author', 
+                text: 'Author',
+                headerStyle: headerStyle,
+                sort: true, 
+            }, 
+            { 
+                dataField: 'genre', 
+                text: 'Genre',
+                headerStyle: headerStyle,
+                sort: true, 
+            },
+            { 
+                dataField: 'ageGroup',
+                text: 'Age Group',
+                headerStyle: headerStyle,
+                sort: true,  
+            },
+            { 
+                dataField: 'kitContents',
+                text: 'Kit Contents',
+                headerStyle
+            },
+            { 
+                dataField: 'location',
+                text: 'Location',
+                headerStyle: headerStyle,
+                sort: true, 
+            },
+            { 
+                dataField: 'synopsis',
+                text: 'Synopsis',
+                headerStyle: headerStyle
+            },
+        ];
+        
         return(
 
-            <View style={tablestyle.container}>
-                <Grid>
-                    <Col size={50}>
-                        <Row style={tablestyle.cell}>
-                            <Text>A</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>B</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>C</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>D</Text>
-                        </Row>
-                    </Col>
-                    <Col size={25}>
-                        <Row style={tablestyle.cell}>
-                            <Text>E</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>F</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>G</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>H</Text>
-                        </Row>
-                    </Col>
-                    <Col size={25}>
-                        <Row style={tablestyle.cell}>
-                            <Text>1</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>2</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>3</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>4</Text>
-                        </Row>
-                    </Col>
-                </Grid>
+            <View>
+                <BootstrapTable 
+                    keyField = 'id'
+                    data = { books } 
+                    columns = { columns }
+                    rowStyle = { rowStyle }
+                />
             </View>       
         );
         
@@ -110,53 +131,8 @@ const Collection = ({ navigation }) => {
             <View style = {styles.titleContainer}>
                 <Text style = {styles.title}>BOOK CLUB KIT COLLECTION</Text>
             </View>
-            
-            <View style={tablestyle.container}>
-                <Grid>
-                    <Col size={50}>
-                        <Row style={tablestyle.cell}>
-                            <Text>A</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>B</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>C</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>D</Text>
-                        </Row>
-                    </Col>
-                    <Col size={25}>
-                        <Row style={tablestyle.cell}>
-                            <Text>E</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>F</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>G</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>H</Text>
-                        </Row>
-                    </Col>
-                    <Col size={25}>
-                        <Row style={tablestyle.cell}>
-                            <Text>1</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>2</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>3</Text>
-                        </Row>
-                        <Row style={tablestyle.cell}>
-                            <Text>4</Text>
-                        </Row>
-                    </Col>
-                </Grid>
-            </View>    
+
+            { renderTable() }
             
             {/*<View>
                 <FlatList
@@ -169,22 +145,5 @@ const Collection = ({ navigation }) => {
 
     );
 }
-
-const tablestyle = StyleSheet.create({
-    container: {
-        width: '100%',
-        height: 300,
-        padding: 16,
-        paddingTop: 100,
-        backgroundColor: '#fff',
-    },
-    cell: {
-        borderWidth: 1,
-        borderColor: '#ddd',
-        flex: 1, 
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-});
 
 export default Collection;
