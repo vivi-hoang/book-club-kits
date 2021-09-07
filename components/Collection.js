@@ -1,10 +1,10 @@
 // ./components/Collection.js
 
 import React, { useEffect, useState } from 'react';
-import { Text, View, ActivityIndicator, FlatList } from 'react-native';
+import { Text, View, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
-import { loggingOut } from '../firebase/FirebaseHelpers';
+import { Col, Row, Grid } from "react-native-easy-grid";
 
 import styles from '../styling/Styles';
 
@@ -38,6 +38,7 @@ const Collection = ({ navigation }) => {
     }
 
     const renderBookCard = ({ item }) => {
+
         return (
             <TouchableOpacity onPress = {() =>
                 navigation.navigate('Book Record', { item })
@@ -50,20 +51,140 @@ const Collection = ({ navigation }) => {
         )
     }
 
+    const renderTable = () => {
+        return(
+
+            <View style={tablestyle.container}>
+                <Grid>
+                    <Col size={50}>
+                        <Row style={tablestyle.cell}>
+                            <Text>A</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>B</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>C</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>D</Text>
+                        </Row>
+                    </Col>
+                    <Col size={25}>
+                        <Row style={tablestyle.cell}>
+                            <Text>E</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>F</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>G</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>H</Text>
+                        </Row>
+                    </Col>
+                    <Col size={25}>
+                        <Row style={tablestyle.cell}>
+                            <Text>1</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>2</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>3</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>4</Text>
+                        </Row>
+                    </Col>
+                </Grid>
+            </View>       
+        );
+        
+    }
+
     return (
         
         <View style = {styles.container}>
             <View style = {styles.titleContainer}>
                 <Text style = {styles.title}>BOOK CLUB KIT COLLECTION</Text>
             </View>
-            <View>
+            
+            <View style={tablestyle.container}>
+                <Grid>
+                    <Col size={50}>
+                        <Row style={tablestyle.cell}>
+                            <Text>A</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>B</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>C</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>D</Text>
+                        </Row>
+                    </Col>
+                    <Col size={25}>
+                        <Row style={tablestyle.cell}>
+                            <Text>E</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>F</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>G</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>H</Text>
+                        </Row>
+                    </Col>
+                    <Col size={25}>
+                        <Row style={tablestyle.cell}>
+                            <Text>1</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>2</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>3</Text>
+                        </Row>
+                        <Row style={tablestyle.cell}>
+                            <Text>4</Text>
+                        </Row>
+                    </Col>
+                </Grid>
+            </View>    
+            
+            {/*<View>
                 <FlatList
                     data = { books }
                     renderItem = { renderBookCard }
                 />
-            </View>
+            </View> */}
         </View>
+
+
     );
 }
+
+const tablestyle = StyleSheet.create({
+    container: {
+        width: '100%',
+        height: 300,
+        padding: 16,
+        paddingTop: 100,
+        backgroundColor: '#fff',
+    },
+    cell: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        flex: 1, 
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+});
 
 export default Collection;
