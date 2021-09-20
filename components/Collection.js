@@ -1,12 +1,13 @@
 // ./components/Collection.js
 
 import React, { useEffect, useState } from 'react';
-import { Text, View, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
+import { Text, View, ActivityIndicator, FlatList } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 
-import BootstrapTable from 'react-bootstrap-table-next';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+// Table dependencies
+import ReactDataGrid from '@inovua/reactdatagrid-community'
+import '@inovua/reactdatagrid-community/index.css'
 
 import styles from '../styling/Styles';
 
@@ -53,95 +54,35 @@ const Collection = ({ navigation }) => {
         )
     }
 
-    const renderTable = () => {                
-
-        const rowStyle = { 
-            backgroundColor: '#c8e6c9' 
-        };
-
-        const headerStyle = {
-            backgroundColor: '#6c757d',
-            color: '#ffffff',
-        };
-
-        const sortingHeaderStyle = {
-            backgroundColor: 'red'
-        };
-
-        const columns = [
-            { 
-                dataField: 'title', 
-                text: 'Title',
-                headerStyle: headerStyle,
-                sort: true, 
-            }, 
-            { 
-                dataField: 'author', 
-                text: 'Author',
-                headerStyle: headerStyle,
-                sort: true, 
-            }, 
-            { 
-                dataField: 'genre', 
-                text: 'Genre',
-                headerStyle: headerStyle,
-                sort: true, 
-            },
-            { 
-                dataField: 'ageGroup',
-                text: 'Age Group',
-                headerStyle: headerStyle,
-                sort: true,  
-            },
-            { 
-                dataField: 'kitContents',
-                text: 'Kit Contents',
-                headerStyle
-            },
-            { 
-                dataField: 'location',
-                text: 'Location',
-                headerStyle: headerStyle,
-                sort: true, 
-            },
-            { 
-                dataField: 'synopsis',
-                text: 'Synopsis',
-                headerStyle: headerStyle
-            },
-        ];
+    // define columns
+    const columns = [
+        { name: 'title', header: 'Title', },
+        { name: 'author', header: 'Author', },
+        { name: 'genre', header: 'Genre', },
+        { name: 'ageGroup', header: 'Age Group', },
+        { name: 'kitContents', header: 'Kit Contents', },
+        { name: 'location', header: 'Location', },
+        { name: 'synopsis', header: 'Synopsis', },
+    ];
+  
+    // define grid styles here
+        const gridStyle = { minHeight: 550 };
         
-        return(
-
-            <View>
-                <BootstrapTable 
-                    keyField = 'id'
-                    data = { books } 
-                    columns = { columns }
-                    rowStyle = { rowStyle }
-                />
-            </View>       
-        );
-        
-    }
-
     return (
         
         <View style = {styles.container}>
             <View style = {styles.titleContainer}>
                 <Text style = {styles.title}>BOOK CLUB KIT COLLECTION</Text>
             </View>
-
-            { renderTable() }
             
-            {/*<View>
-                <FlatList
-                    data = { books }
-                    renderItem = { renderBookCard }
-                />
-            </View> */}
-        </View>
+            <ReactDataGrid
+                idProperty="id"
+                columns={columns}
+                dataSource={books}
+                style={gridStyle}
+            />
 
+        </View>
 
     );
 }

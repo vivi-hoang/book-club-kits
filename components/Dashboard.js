@@ -1,7 +1,7 @@
 // ./components/Dashboard.js
 
 import React, { useEffect, useState } from 'react';
-import { Text, View, Alert } from 'react-native';
+import { Text, View, Alert, FlatList } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 import { loggingOut } from '../firebase/FirebaseHelpers';
@@ -15,8 +15,12 @@ const Dashboard = ({ navigation }) => {
     let currentUserUID = firebase.auth().currentUser.uid;
     const [firstName, setFirstName] = useState('');
     const [userRole, setUserRole] = useState('');
+
+    // For displaying book club kit collection
+    const [loading, setLoading] = useState(true); // Set to true on component mount
+    const [books, setBooks] = useState([]); // Initialize to empty array of books
   
-    // This useEffect is called every time component renders
+    // Retrieves user info from Firebase
     useEffect(() => {
         
         // isMounted addresses error "Can't perform a React state update on an unmounted component"
@@ -37,10 +41,10 @@ const Dashboard = ({ navigation }) => {
                 } else {
                     // Retrieve data as key-value pair
                     let user = doc.data();
-                    console.log('Firebase UID: ' + currentUserUID);
-                    console.log('Name: ' + user.firstName + ' ' + user.lastName);
-                    console.log('Email: ' + user.email);
-                    console.log('Role: ' + user.role);
+                    //console.log('Firebase UID: ' + currentUserUID);
+                    //console.log('Name: ' + user.firstName + ' ' + user.lastName);
+                    //console.log('Email: ' + user.email);
+                    //console.log('Role: ' + user.role);
                     
                     setFirstName(user.firstName);
                     setUserRole(user.role);
@@ -49,39 +53,69 @@ const Dashboard = ({ navigation }) => {
         }
         getUserInfo();
         return () => { isMounted = false };
-    })
+    }) // This useEffect is called every time component renders
+
+    // Retrieve book collection from Firebase
+    useEffect(() => {
+        const subscriber = firebase
+            .firestore()
+            .collection('books')
+            .onSnapshot(querySnapshot => {
+                const retrievedBooks = [];
+                querySnapshot.forEach(documentSnapshot => {
+                    retrievedBooks.push({
+                        ...documentSnapshot.data(),
+                        key: documentSnapshot.id
+                    });
+                });
+            
+                setBooks(retrievedBooks);
+                setLoading(false);
+            });        
+        return () => subscriber(); // Unsubscribe from events when no longer in use
+    }, []); // This useEffect is called only first time component renders.
   
     const handlePress = () => {
       loggingOut();
       navigation.replace('Home');
     };
 
-    // Display different dashboard based on user role  
-    
-    const renderUserType = (userRole) => {
+    // Handles the display of the books in the FlatList
+    const renderBookCard = ({ item }) => {
+
+        return (
+            <TouchableOpacity onPress = {() =>
+                navigation.navigate('Book Record', { item })
+            }>
+                <View style = { styles.listItem }>
+                    <Text>Title: { item.title }</Text>
+                    <Text>Synopsis: { item.synopsis }</Text>
+                </View>
+            </TouchableOpacity>
+        )
+    }
+
+    // Display different dashboard based on user role
+    const renderPatronDashboard = (userRole) => {
         if (userRole === 'patron') {
             return (
-                <Text style={styles.titleText}>THIS IS THE PATRON DASHBOARD</Text>
-            );
-        } else if (userRole === 'staff') {
-            return (
-                <Text style={styles.titleText}>THIS IS THE STAFF DASHBOARD</Text>
-            );
-        } else if (userRole === 'admin') {
-            return (
-                <Text style={styles.titleText}>THIS IS THE ADMIN DASHBOARD</Text>
-            );
-        } else {
-            return (
-                <Text style={styles.titleText}>Dashboard: User role unrecognized</Text>
+                <View>
+                    <Text style={styles.titleText}>THIS IS THE PATRON DASHBOARD</Text>
+
+                    <FlatList
+                        data = { books }
+                        renderItem = { renderBookCard }
+                    />
+                </View>
             );
         }
-    }
+    };
     
     const renderStaffDashboard = (userRole) => {
         if (userRole === 'staff' || userRole === 'admin') {
             return (
                 <View>
+                    <Text style={styles.titleText}>THIS IS THE STAFF DASHBOARD</Text>
                     <TouchableOpacity 
                         style = { styles.button }
                         onPress = {() => navigation.navigate('Collection')}
@@ -124,7 +158,7 @@ const Dashboard = ({ navigation }) => {
                 >
                     <Text style = { styles.buttonText }>Log Out</Text>
                 </TouchableOpacity>
-                { renderUserType(userRole) }
+                { renderPatronDashboard(userRole) }
                 { renderStaffDashboard(userRole) }
                 { renderAdminDashboard(userRole) }
             </View>  
