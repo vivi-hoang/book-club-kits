@@ -1,7 +1,8 @@
 // ./components/Home.js
 
 import React, { useEffect, useState } from 'react';
-import { Text, View, FlatList } from 'react-native';
+//import { Text, View, FlatList, SafeAreaView } from 'react-native';
+//import {SearchBar} from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 
@@ -41,8 +42,12 @@ const Home = ({ navigation }) => {
                 navigation.navigate('Book Record', { item })
             }>
                 <View style = { styles.listItem }>
-                    <Text>Title: { item.title }</Text>
-                    <Text>Synopsis: { item.synopsis }</Text>
+                    <Text style = { styles.itemTitle }>{ item.title }</Text>
+                    <Text><b>Author</b>: { item.author }</Text>
+                    <Text><b>Genre</b>: { item.genre }</Text>
+                    <Text><b>Age Group</b>: { item.ageGroup }</Text>
+                    <Text><b>Kit Contents</b>: { item.kitContents }</Text>
+                    <Text><b>Synopsis</b>: { item.synopsis }</Text>
                 </View>
             </TouchableOpacity>
         )

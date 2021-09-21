@@ -43,18 +43,13 @@ const Collection = ({ navigation }) => {
             type: 'string',
         },
         {
-            name: 'ageGroup',
-            operator: 'contains',
-            type: 'string',
-        },
-        {
             name: 'kitContents',
             operator: 'contains',
             type: 'string',
         },
         {
             name: 'location',
-            operator: 'equals',
+            operator: 'contains',
             type: 'string',
         },
         {

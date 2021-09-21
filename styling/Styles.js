@@ -1,6 +1,7 @@
 // ./styles/Styles.js
 
 import { StyleSheet } from 'react-native';
+import { BorderlessButton } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
     container: {
@@ -20,7 +21,12 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 10,
         backgroundColor: '#FFF',
-        flexDirection: 'column',       
+        flexDirection: 'column', 
+    },
+    itemTitle: {
+        fontSize: 18,        
+        fontWeight: 'bold',
+        fontStyle: 'italic',
     },
     button: {
         alignItems: 'center',
