@@ -13,7 +13,7 @@ import SignIn from '../components/SignIn';
 import Dashboard from '../components/Dashboard';
 import UserList from '../components/UserList';
 import UserRecord from '../components/UserRecord';
-import AddBook from '../components/AddBook';
+import CreateKitRecord from '../components/CreateKitRecord';
 import Collection from '../components/Collection';
 import BookRecord from '../components/BookRecord';
 
@@ -82,8 +82,8 @@ const MainStackNavigator = () => {
                 //options = {{ headerShown: false }}
             />
             <Stack.Screen
-                name = 'Add Book'
-                component = { AddBook }
+                name = 'Create Kit Record'
+                component = { CreateKitRecord }
                 //options = {{ headerShown: false }}
             />
             <Stack.Screen

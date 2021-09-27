@@ -16,10 +16,6 @@ const Collection = ({ navigation }) => {
 
     const [loading, setLoading] = useState(true); // Set to true on component mount
     const [books, setBooks] = useState([]); // Initialize to empty array of books
-
-    const genres = {
-
-    }
     
     const filterValue = [
         {
@@ -28,7 +24,12 @@ const Collection = ({ navigation }) => {
             type: 'string',
         },
         {
-            name: 'author',
+            name: 'authorFirstName',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'authorLastName',
             operator: 'contains',
             type: 'string',
         },
@@ -48,48 +49,12 @@ const Collection = ({ navigation }) => {
             type: 'string',
         },
         {
-            name: 'location',
-            operator: 'contains',
-            type: 'string',
-        },
-        {
             name: 'synopsis',
             operator: 'contains',
             type: 'string',
         }
 
     ];
-
-    /**
-    const [searchText, setSearchText] = useState('');
-    const searchTextRef = useRef(searchText);
-    searchTextRef.current = searchText;
-
-    
-    // Hook to handle search
-    const renderSearchResults = useCallback(({ value }) => {
-        const lowerSearchText = searchTextRef.current.toLowerCase();
-        if (!lowerSearchText) {
-          return value;
-        }
-    
-        const str = value + '' // get string value
-        const v = str.toLowerCase() // our search is case insesitive
-        const index = v.indexOf(lowerSearchText);
-    
-        if (index === -1) {
-          return value;
-        }
-    
-        return [
-          <span key="before">{str.slice(0, index)}</span>,
-          <span key="match" style={{ background: 'yellow', fontWeight: 'bold'}}>{str.slice(index, index + lowerSearchText.length)}</span>,
-          <span key="after">{str.slice(index + lowerSearchText.length)}</span>
-        ]
-    }, [])
-
-    const shouldComponentUpdate = () => true;
-     */
 
     // Hook to retrieve book list from Firebase
     useEffect(() => {
@@ -134,41 +99,51 @@ const Collection = ({ navigation }) => {
         {   
             name: 'title', 
             header: 'Title',
-            defaultFlex: 1,
-            width: 35,
+            group: 'book',
+            width: 200,
         },
         { 
-            name: 'author', 
-            header: 'Author', 
-            defaultFlex: 1,            
-            width: 35,
+            name: 'authorFirstName', 
+            header: 'First Name',
+            group: 'author',        
+            width: 120,
+        },
+        { 
+            name: 'authorLastName', 
+            header: 'Last Name',
+            group: 'author',
+            width: 120,
         },
         { 
             name: 'genre', 
-            header: 'Genre', 
-            defaultFlex: 1,
-            width: 15,
+            header: 'Genre',
+            group: 'details',
+            width: 100,
         },
         { 
             name: 'ageGroup', 
-            header: 'Age Group', 
-            defaultFlex: 1,
+            header: 'Age',
+            group: 'details',
+            width: 100,
         },
         { 
             name: 'kitContents', 
-            header: 'Kit Contents', 
-            defaultFlex: 1,
-        },
-        { 
-            name: 'location', 
-            header: 'Location',
-            defaultFlex: 1,            
+            header: 'Kit Contents',
+            group: 'details',
+            width: 200,
         },
         { 
             name: 'synopsis', 
-            header: 'Synopsis', 
+            header: 'Synopsis',
+            group: 'details',
             defaultFlex: 1,
         },
+    ];
+
+    const groups = [
+        { name: 'author', header: 'Author' },
+        { name: 'book', header: 'Book' },
+        { name: 'details', header: 'Book Details' }
     ];
   
     // define grid styles here
@@ -207,6 +182,7 @@ const Collection = ({ navigation }) => {
             <ReactDataGrid
                 idProperty="id"
                 columns = { columns }
+                groups = { groups }
                 dataSource = { books }
                 style = { gridStyle }
                 defaultFilterValue = { filterValue }

@@ -1,4 +1,4 @@
-// ./components/AddBook.js
+// ./components/CreateKitRecord.js
 
 import React, { useEffect, useState } from 'react';
 import { Text, View, TextInput, Alert, ScrollView, Keyboard, SafeAreaView } from 'react-native';
@@ -8,10 +8,11 @@ import { storeBook } from '../firebase/FirebaseHelpers';
 import styles from '../styling/Styles';
 
 // Destructure navigation; passed as a property to the component.
-const AddBook = ({ navigation }) => {
+const CreateKitRecord = ({ navigation }) => {
 
     const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
+    const [authorFirstName, setAuthorFirstName] = useState('');
+    const [authorLastName, setAuthorLastName] = useState('');
     const [genre, setGenre] = useState('');
     const [ageGroup, setAgeGroup] = useState('');
     const [kitContents, setKitContents] = useState('');
@@ -20,7 +21,8 @@ const AddBook = ({ navigation }) => {
 
     const emptyState = () => {
         setTitle('');
-        setAuthor('');
+        setAuthorFirstName('');
+        setAuthorLastName('');
         setGenre('');
         setAgeGroup('');
         setKitContents('');
@@ -32,7 +34,8 @@ const AddBook = ({ navigation }) => {
         // Entered info passed in as arguments to storeBook function
         storeBook(
             title,
-            author,
+            authorFirstName,
+            authorLastName,
             genre,
             ageGroup,
             kitContents,
@@ -43,23 +46,11 @@ const AddBook = ({ navigation }) => {
         emptyState();
     }
 
-/*
-Inputs needed:
-Title
-Author
-Genre
-Age Group
-Kit Contents
-Location
-Synopsis
-*/
-
-
     return (
 
         <SafeAreaView style = { styles.container }>
             <View style = {styles.titleContainer}>
-                <Text style = {styles.title}>ADD BOOK FORM</Text>
+                <Text style = {styles.title}>CREATE KIT RECORD FORM</Text>
             </View>
 
             <ScrollView onBlur = { Keyboard.dismiss }>               
@@ -72,9 +63,16 @@ Synopsis
                 
                 <TextInput
                     style = { styles.textInput }
-                    placeholder = 'Author'
-                    value = { author }
-                    onChangeText = {(author) => setAuthor(author)}
+                    placeholder = 'Author First Name'
+                    value = { authorFirstName }
+                    onChangeText = {(authorFirstName) => setAuthorFirstName(authorFirstName)}
+                />
+
+                <TextInput
+                    style = { styles.textInput }
+                    placeholder = 'Author Last Name'
+                    value = { authorLastName }
+                    onChangeText = {(authorLastName) => setAuthorLastName(authorLastName)}
                 />
 
                 <TextInput
@@ -113,7 +111,7 @@ Synopsis
                 />
                 
                 <TouchableOpacity style = { styles.button } onPress = { handlePress }>
-                    <Text style = { styles.buttonText }>Save Book</Text>
+                    <Text style = { styles.buttonText }>Save Kit Record</Text>
                 </TouchableOpacity>
 
             </ScrollView>
@@ -123,4 +121,4 @@ Synopsis
 
 }
 
-export default AddBook;
+export default CreateKitRecord;

@@ -1,8 +1,8 @@
 // ./components/Home.js
 
 import React, { useEffect, useState } from 'react';
-//import { Text, View, FlatList, SafeAreaView } from 'react-native';
-//import {SearchBar} from 'react-native-elements';
+import { Text, View, FlatList } from 'react-native';
+import { SearchBar } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 
@@ -14,6 +14,11 @@ const Home = ({ navigation }) => {
     // For displaying book club kit collection
     const [loading, setLoading] = useState(true); // Set to true on component mount
     const [books, setBooks] = useState([]); // Initialize to empty array of books
+
+    // For search bar
+    const [search, setSearch] = useState('');
+    const [filteredDataSource, setFilteredDataSource] = useState([]);
+    const [masterDataSource, setMasterDataSource] = useState([]);
 
     // Retrieve book collection from Firebase
     useEffect(() => {
@@ -35,15 +40,46 @@ const Home = ({ navigation }) => {
         return () => subscriber(); // Unsubscribe from events when no longer in use
     }, []); // This useEffect is called only first time component renders.
 
+    const searchFilterFunction = (text) => {
+        // Check if searched text is not blank
+        if (text) {
+          // Inserted text is not blank
+          // Filter the masterDataSource
+          // Update FilteredDataSource
+            const newData = masterDataSource.filter(function (item) {
+                const itemData = item.title
+                    ? item.title.toUpperCase()
+                    : ''.toUpperCase();
+                const textData = text.toUpperCase();
+                return itemData.indexOf(textData) > -1;
+            });
+            setFilteredDataSource(newData);
+            setSearch(text);
+        } else {
+          // Inserted text is blank
+          // Update FilteredDataSource with masterDataSource
+          setFilteredDataSource(masterDataSource);
+          setSearch(text);
+        }
+    };
+
     const renderBookCard = ({ item }) => {
 
         return (
             <TouchableOpacity onPress = {() =>
-                navigation.navigate('Book Record', { item })
+                navigation.navigate('Book Record', { 
+                    title: item.title,
+                    authorFirstName: item.authorFirstName,
+                    authorLastName: item.authorLastName,
+                    genre: item.genre,
+                    ageGroup: item.ageGroup,
+                    kitContents: item.kitContents,
+                    synopsis: item.synopsis,
+                })
             }>
                 <View style = { styles.listItem }>
                     <Text style = { styles.itemTitle }>{ item.title }</Text>
-                    <Text><b>Author</b>: { item.author }</Text>
+                    <Text><b>Author</b>: { item.authorFirstName } { item.authorLastName }</Text>
                     <Text><b>Genre</b>: { item.genre }</Text>
                     <Text><b>Age Group</b>: { item.ageGroup }</Text>
                     <Text><b>Kit Contents</b>: { item.kitContents }</Text>
@@ -73,8 +109,17 @@ const Home = ({ navigation }) => {
             </View>
 
             <View>
+                <SearchBar
+                    round
+                    searchIcon={{size: 24}}
+                    onChangeText={(text) => searchFilterFunction(text)}
+                    onClear={(text) => searchFilterFunction('')}
+                    placeholder="Type Here..."
+                    value={search}
+                />
                 <FlatList
                     data = { books }
+                    keyExtractor = { (item, index) => index.toString() }
                     renderItem = { renderBookCard }
                 />
             </View>

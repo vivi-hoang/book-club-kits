@@ -85,11 +85,23 @@ const Dashboard = ({ navigation }) => {
 
         return (
             <TouchableOpacity onPress = {() =>
-                navigation.navigate('Book Record', { item })
+                navigation.navigate('Book Record', { 
+                    title: item.title,
+                    authorFirstName: item.authorFirstName,
+                    authorLastName: item.authorLastName,
+                    genre: item.genre,
+                    ageGroup: item.ageGroup,
+                    kitContents: item.kitContents,
+                    synopsis: item.synopsis,
+                })
             }>
                 <View style = { styles.listItem }>
-                    <Text>Title: { item.title }</Text>
-                    <Text>Synopsis: { item.synopsis }</Text>
+                    <Text style = { styles.itemTitle }>{ item.title }</Text>
+                    <Text><b>Author</b>: { item.authorFirstName } { item.authorLastName }</Text>
+                    <Text><b>Genre</b>: { item.genre }</Text>
+                    <Text><b>Age Group</b>: { item.ageGroup }</Text>
+                    <Text><b>Kit Contents</b>: { item.kitContents }</Text>
+                    <Text><b>Synopsis</b>: { item.synopsis }</Text>
                 </View>
             </TouchableOpacity>
         )
@@ -124,9 +136,9 @@ const Dashboard = ({ navigation }) => {
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style = { styles.button }
-                        onPress = {() => navigation.navigate('Add Book')}
+                        onPress = {() => navigation.navigate('Create Kit Record')}
                     >
-                        <Text style = { styles.buttonText }>Add Book</Text>
+                        <Text style = { styles.buttonText }>Create Kit Record</Text>
                     </TouchableOpacity>
                 </View>
             );
