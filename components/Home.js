@@ -25,6 +25,7 @@ const Home = ({ navigation }) => {
         const subscriber = firebase
             .firestore()
             .collection('books')
+            .orderBy('title')
             .onSnapshot(querySnapshot => {
                 const retrievedBooks = [];
                 querySnapshot.forEach(documentSnapshot => {

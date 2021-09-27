@@ -60,6 +60,7 @@ const Dashboard = ({ navigation }) => {
         const subscriber = firebase
             .firestore()
             .collection('books')
+            .orderBy('title') // Order data by title by default
             .onSnapshot(querySnapshot => {
                 const retrievedBooks = [];
                 querySnapshot.forEach(documentSnapshot => {
