@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { Text, View, FlatList } from 'react-native';
-import { SearchBar } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 
@@ -15,17 +14,12 @@ const Home = ({ navigation }) => {
     const [loading, setLoading] = useState(true); // Set to true on component mount
     const [books, setBooks] = useState([]); // Initialize to empty array of books
 
-    // For search bar
-    const [search, setSearch] = useState('');
-    const [filteredDataSource, setFilteredDataSource] = useState([]);
-    const [masterDataSource, setMasterDataSource] = useState([]);
-
     // Retrieve book collection from Firebase
     useEffect(() => {
         const subscriber = firebase
             .firestore()
             .collection('books')
-            .orderBy('title')
+            .orderBy('title') // Order data by title by default
             .onSnapshot(querySnapshot => {
                 const retrievedBooks = [];
                 querySnapshot.forEach(documentSnapshot => {
@@ -40,29 +34,6 @@ const Home = ({ navigation }) => {
             });        
         return () => subscriber(); // Unsubscribe from events when no longer in use
     }, []); // This useEffect is called only first time component renders.
-
-    const searchFilterFunction = (text) => {
-        // Check if searched text is not blank
-        if (text) {
-          // Inserted text is not blank
-          // Filter the masterDataSource
-          // Update FilteredDataSource
-            const newData = masterDataSource.filter(function (item) {
-                const itemData = item.title
-                    ? item.title.toUpperCase()
-                    : ''.toUpperCase();
-                const textData = text.toUpperCase();
-                return itemData.indexOf(textData) > -1;
-            });
-            setFilteredDataSource(newData);
-            setSearch(text);
-        } else {
-          // Inserted text is blank
-          // Update FilteredDataSource with masterDataSource
-          setFilteredDataSource(masterDataSource);
-          setSearch(text);
-        }
-    };
 
     const renderBookCard = ({ item }) => {
 
@@ -85,6 +56,10 @@ const Home = ({ navigation }) => {
                     <Text><b>Age Group</b>: { item.ageGroup }</Text>
                     <Text><b>Kit Contents</b>: { item.kitContents }</Text>
                     <Text><b>Synopsis</b>: { item.synopsis }</Text>
+                    <TouchableOpacity style = { styles.button } onPress={() => navigation.navigate('Schedule')} >
+                        <Text style = { styles.buttonText}>View Availability</Text>
+                    </TouchableOpacity>
+
                 </View>
             </TouchableOpacity>
         )
@@ -108,16 +83,8 @@ const Home = ({ navigation }) => {
                 <Text style = {styles.buttonText}>Sign In</Text>
             </TouchableOpacity>
             </View>
-
+        
             <View>
-                <SearchBar
-                    round
-                    searchIcon={{size: 24}}
-                    onChangeText={(text) => searchFilterFunction(text)}
-                    onClear={(text) => searchFilterFunction('')}
-                    placeholder="Type Here..."
-                    value={search}
-                />
                 <FlatList
                     data = { books }
                     keyExtractor = { (item, index) => index.toString() }

@@ -16,6 +16,7 @@ import UserRecord from '../components/UserRecord';
 import CreateKitRecord from '../components/CreateKitRecord';
 import Collection from '../components/Collection';
 import BookRecord from '../components/BookRecord';
+import Schedule from '../components/Schedule';
 
 const Stack = createStackNavigator();
 
@@ -94,6 +95,11 @@ const MainStackNavigator = () => {
             <Stack.Screen
                 name = 'Book Record'
                 component = { BookRecord }
+                //options = {{ headerShown: false }}
+            />
+            <Stack.Screen
+                name = 'Schedule'
+                component = { Schedule }
                 //options = {{ headerShown: false }}
             />
         </Stack.Navigator>

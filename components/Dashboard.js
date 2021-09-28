@@ -103,6 +103,9 @@ const Dashboard = ({ navigation }) => {
                     <Text><b>Age Group</b>: { item.ageGroup }</Text>
                     <Text><b>Kit Contents</b>: { item.kitContents }</Text>
                     <Text><b>Synopsis</b>: { item.synopsis }</Text>
+                    <TouchableOpacity style = { styles.button } onPress={() => navigation.navigate('Schedule')} >
+                        <Text style = { styles.buttonText}>View Availability</Text>
+                    </TouchableOpacity>
                 </View>
             </TouchableOpacity>
         )

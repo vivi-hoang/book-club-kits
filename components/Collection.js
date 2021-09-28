@@ -2,12 +2,16 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { Text, View, ActivityIndicator, TextInput } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { BorderlessButton, TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 
 // Table dependencies
 import ReactDataGrid from '@inovua/reactdatagrid-community'
 import '@inovua/reactdatagrid-community/index.css'
+
+import ReactFlexyTable from 'react-flexy-table';
+import 'react-flexy-table/dist/index.css';
+import { Feather } from '@expo/vector-icons';
 
 import styles from '../styling/Styles';
 
@@ -16,45 +20,6 @@ const Collection = ({ navigation }) => {
 
     const [loading, setLoading] = useState(true); // Set to true on component mount
     const [books, setBooks] = useState([]); // Initialize to empty array of books
-    
-    const filterValue = [
-        {
-            name: 'title',
-            operator: 'contains',
-            type: 'string',
-        },
-        {
-            name: 'authorFirstName',
-            operator: 'contains',
-            type: 'string',
-        },
-        {
-            name: 'authorLastName',
-            operator: 'contains',
-            type: 'string',
-        },
-        {
-            name: 'genre',
-            operator: 'contains',
-            type: 'string',
-        },
-        {
-            name: 'ageGroup',
-            operator: 'contains',
-            type: 'string',
-        },
-        {
-            name: 'kitContents',
-            operator: 'contains',
-            type: 'string',
-        },
-        {
-            name: 'synopsis',
-            operator: 'contains',
-            type: 'string',
-        }
-
-    ];
 
     // Hook to retrieve book list from Firebase
     useEffect(() => {
@@ -94,6 +59,7 @@ const Collection = ({ navigation }) => {
         )
     }
 
+    // REACT-DATA-GRID-COMMUNITY code
     // define columns
     const columns = [
         {   
@@ -145,27 +111,83 @@ const Collection = ({ navigation }) => {
         { name: 'book', header: 'Book' },
         { name: 'details', header: 'Book Details' }
     ];
+
+    const filterValue = [
+        {
+            name: 'title',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'authorFirstName',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'authorLastName',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'genre',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'ageGroup',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'kitContents',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'synopsis',
+            operator: 'contains',
+            type: 'string',
+        }
+
+    ];
   
     // define grid styles here
     const gridStyle = { minHeight: 550 };
 
     /**
-    const onSearchChange = ({ target: { value } }) => {
-        const visibleColumns = gridRef.current.visibleColumns;
-    
-        setSearchText(value);
-    
-        const newDataSource = people.filter(p => {
-            return visibleColumns.reduce((acc, col) => {
-            const v = (p[col.id] + '').toLowerCase() // get string value
-            return acc || v.indexOf(value.toLowerCase()) != -1 // make the search case insensitive
-            }, false)
-        });
-    
-        setDataSource(newDataSource);
-    }
-     */
-        
+    // REACT-FLEXY-TABLE code
+    const columns = [
+        {
+          header: 'Title',
+          key: 'title'
+        },
+        {
+          header: 'Author First Name',
+          key: 'authorFirstName'
+        },
+        {
+            header: 'Author Last Name',
+            key: 'authorLastName'
+        },
+        {
+            header: 'Genre',
+            key: 'genre'
+        },
+        {
+            header: 'Age Group',
+            key: 'ageGroup'
+        },
+        {
+            header: 'Kit Contents',
+            key: 'kitContents'
+        },
+        {
+            header: 'Synopsis',
+            key: 'synopsis'
+        }
+      ]
+    */
+
     return (
         
         <View style = {styles.container}>
@@ -173,12 +195,6 @@ const Collection = ({ navigation }) => {
                 <Text style = {styles.title}>BOOK CLUB KIT COLLECTION</Text>
             </View>
             
-            {/**
-            <div style={{  marginBottom: 20 }}>
-                <label>Search kits: <TextInput value = {searchText} onChange = { onSearchChange }/></label>
-            </div>
-             */}
-
             <ReactDataGrid
                 idProperty="id"
                 columns = { columns }
@@ -187,6 +203,21 @@ const Collection = ({ navigation }) => {
                 style = { gridStyle }
                 defaultFilterValue = { filterValue }
             />
+
+            {/**
+            <View>
+                <ReactFlexyTable 
+                    data = { books } 
+                    sortable
+                    columns = { columns }
+                    nonSortCols = { ['kitContents', 'synopsis'] }
+                    filterable
+                    globalSearch
+                    pageSize = { 50 }
+                    className = 'bookTable'
+                />
+            </View>
+            */}
 
         </View>
 
