@@ -30,9 +30,23 @@ const Schedule = ({ navigation, route }) => {
     useEffect(() => {
 
         const formattedDates = {};
+        /**
         reservedDates.forEach((day) => {
             formattedDates[day] = { disabled: true, disableTouchEvent: true, color: '#6A6E72', textColor: 'white' }
         });
+         */
+        for (let i = 0; i < reservedDates.length; i++) {
+            if (i == 0) {
+                let date = reservedDates[i];
+                formattedDates[date] = { disabled: true, disableTouchEvent: true, startingDay: true, color: '#6A6E72', textColor: 'white' }
+            } else if (i == reservedDates.length - 1) {
+                let date = reservedDates[i];
+                formattedDates[date] = { disabled: true, disableTouchEvent: true, endingDay: true, color: '#6A6E72', textColor: 'white' }
+            } else {
+                let date = reservedDates[i]
+                formattedDates[date] = { disabled: true, disableTouchEvent: true, color: '#6A6E72', textColor: 'white' }
+            }
+        }
         console.log(formattedDates);
         setMarkedDates(formattedDates);
       
