@@ -13,13 +13,37 @@ import { Feather } from "@expo/vector-icons";
 import styles from '../styling/Styles';
 
 // Destructure navigation; passed as a property to the component.
-const Schedule = ({ navigation }) => {
+const Schedule = ({ navigation, route }) => {
+
+    const item = route.params;
+    const reservedDates = item.reservedDates;
+
+    const [markedDates, setMarkedDates] = useState({});
+
+    const testDates = {
+        '2021-10-10': {disabled: true, disableTouchEvent: true, startingDay: true, color: '#6A6E72', textColor: 'white' },
+		'2021-10-11': {disabled: true, disableTouchEvent: true, color: '#6A6E72', textColor: 'white' },
+		'2021-10-12': {disabled: true, disableTouchEvent: true, endingDay: true, color: '#6A6E72', textColor: 'white' },
+    }
+    
+    // Display a books' unavailable dates on calendar
+    useEffect(() => {
+
+        const formattedDates = {};
+        reservedDates.forEach((day) => {
+            formattedDates[day] = { disabled: true, disableTouchEvent: true, color: '#6A6E72', textColor: 'white' }
+        });
+        console.log(formattedDates);
+        setMarkedDates(formattedDates);
+      
+    }, []); // This useEffect is called only once, the first time the component renders.
 
     return (
         
         <View style = {styles.container}>
             <View style = {styles.titleContainer}>
-                <Text style = {styles.title}>CALENDAR</Text>
+                <Text style = {styles.itemTitle}>{ item.title }</Text>
+                <Text>by { item.authorFirstName } { item.authorLastName }</Text>
             </View>
             <Calendar 
                 // Initially visible month. Default = Date()
@@ -33,20 +57,17 @@ const Schedule = ({ navigation }) => {
                     <Feather name="arrow-left" size={24} color="black" /> : 
                     <Feather name="arrow-right" size={24} color="black" />
                 }
-                // Disable all touch events for disabled days. can be override with disableTouchEvent in markedDates
-                disableAllTouchEventsForDisabledDays = { true }
                  // Do not show days of other months in month page. Default = false
                 hideExtraDays = { true }
+                // Disable all touch events for disabled days. can be override with disableTouchEvent in markedDates
+                disableAllTouchEventsForDisabledDays={true}
                  // Enable the option to swipe between months. Default = false
                 enableSwipeMonths = { true }
-                markedDates = {{
-                    '2021-09-29': {disabled: true},
-                    '2021-09-30': {disabled: true},
-                    '2021-10-01': {disabled: true}, 
-                    '2021-10-02': {disabled: true},
-                    '2021-10-03': {disabled: true},
-                    '2021-10-04': {disabled: true},
-                    '2021-10-05': {disabled: true},
+                markingType = { 'period' }
+                markedDates = { markedDates }
+                theme = {{
+                    textSectionTitleDisabledColor: '#red',
+                    textDisabledColor: '#green',
                 }}
             />
         </View>
