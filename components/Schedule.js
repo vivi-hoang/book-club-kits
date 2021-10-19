@@ -20,33 +20,37 @@ const Schedule = ({ navigation, route }) => {
 
     const [markedDates, setMarkedDates] = useState({});
 
-    const testDates = {
-        '2021-10-10': {disabled: true, disableTouchEvent: true, startingDay: true, color: '#6A6E72', textColor: 'white' },
-		'2021-10-11': {disabled: true, disableTouchEvent: true, color: '#6A6E72', textColor: 'white' },
-		'2021-10-12': {disabled: true, disableTouchEvent: true, endingDay: true, color: '#6A6E72', textColor: 'white' },
-    }
-    
     // Display a books' unavailable dates on calendar
     useEffect(() => {
 
-        const formattedDates = {};
-        /**
-        reservedDates.forEach((day) => {
-            formattedDates[day] = { disabled: true, disableTouchEvent: true, color: '#6A6E72', textColor: 'white' }
-        });
-         */
-        for (let i = 0; i < reservedDates.length; i++) {
-            if (i == 0) {
-                let date = reservedDates[i];
-                formattedDates[date] = { disabled: true, disableTouchEvent: true, startingDay: true, color: '#6A6E72', textColor: 'white' }
-            } else if (i == reservedDates.length - 1) {
-                let date = reservedDates[i];
-                formattedDates[date] = { disabled: true, disableTouchEvent: true, endingDay: true, color: '#6A6E72', textColor: 'white' }
-            } else {
-                let date = reservedDates[i]
-                formattedDates[date] = { disabled: true, disableTouchEvent: true, color: '#6A6E72', textColor: 'white' }
+        const datesArr = [];
+        const formattedDates = {}
+
+        // Iterate through reservedDates to create array of the date ranges saved to this title
+        reservedDates.forEach(dateSet => {
+            datesArr.push({
+                dates: dateSet.dates,
+            });
+        })
+
+        // Iterate through each date range and then each date to add calendar formatting
+        for (let i = 0; i < datesArr.length; i++) {
+            for (let j = 0; j < datesArr[i].dates.length; j++) {
+                
+                if (j == 0) {
+                    let date = datesArr[i].dates[j];
+                    formattedDates[date] = { disabled: true, disableTouchEvent: true, startingDay: true, color: '#6A6E72', textColor: 'white' }
+                } else if (j == datesArr[i].dates.length - 1) {
+                    let date = datesArr[i].dates[j];
+                    formattedDates[date] = { disabled: true, disableTouchEvent: true, endingDay: true, color: '#6A6E72', textColor: 'white' }
+                } else {
+                    let date = datesArr[i].dates[j];
+                    formattedDates[date] = { disabled: true, disableTouchEvent: true, color: '#6A6E72', textColor: 'white' }
+                }
+
             }
         }
+
         console.log(formattedDates);
         setMarkedDates(formattedDates);
       
