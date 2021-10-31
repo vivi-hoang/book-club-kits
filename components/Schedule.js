@@ -18,6 +18,7 @@ const Schedule = ({ navigation, route }) => {
     const item = route.params;
     const reservedDates = item.reservedDates;
 
+    //const [selectedDay, setSelectedDay] = useState({})
     const [markedDates, setMarkedDates] = useState({});
 
     // Display a books' unavailable dates on calendar
@@ -51,10 +52,29 @@ const Schedule = ({ navigation, route }) => {
             }
         }
 
-        console.log(formattedDates);
         setMarkedDates(formattedDates);
+        console.log('useEffect formattedDates', formattedDates);
       
-    }, []); // This useEffect is called only once, the first time the component renders.
+    }, [ ]); // This useEffect is called only once, the first time the component renders.
+
+    const renderSelectedDates = (day) => {
+        console.log('selected day', day)
+        //const formattedDates = {}
+
+        // Extract YYYY-MM-DD
+        let selectedDate = day.dateString; 
+        
+        // Business rules:
+        // Check if the date has already passed
+        // Add three weeks
+        // Check if first date or last date conflicts with any current dates
+
+        // Add formatting
+        //formattedDates[selectedDate] = { startingDay: true, endingDay: true, selected: true, color: 'blue', textColor: 'white' }
+        //console.log(formattedDates);
+
+        setMarkedDates({...markedDates, [day.dateString]: { startingDay: true, endingDay: true, selected: true, color: '#415CE0', textColor: 'white' }}); // Add to array
+    };
 
     return (
         
@@ -67,7 +87,8 @@ const Schedule = ({ navigation, route }) => {
                 // Initially visible month. Default = Date()
                 current = { Date() }
                 // Handler which gets executed on day press. Default = undefined
-                onDayPress = {(day) => {console.log('selected day', day)}}
+                //onDayPress = {(day) => {console.log('selected day', day)}}
+                onDayPress = { renderSelectedDates }
                 // Hide month navigation arrows. Default = false
                 hideArrows = { false }
                 // Replace default arrows with custom ones (direction can be 'left' or 'right')
