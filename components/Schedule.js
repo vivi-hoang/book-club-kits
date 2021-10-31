@@ -9,6 +9,7 @@ import { loggingOut } from '../firebase/FirebaseHelpers';
 // Calendar dependency
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import { Feather } from "@expo/vector-icons";
+import dateFns from 'date-fns';
 
 import styles from '../styling/Styles';
 
@@ -53,27 +54,21 @@ const Schedule = ({ navigation, route }) => {
         }
 
         setMarkedDates(formattedDates);
-        console.log('useEffect formattedDates', formattedDates);
       
     }, [ ]); // This useEffect is called only once, the first time the component renders.
 
     const renderSelectedDates = (day) => {
         console.log('selected day', day)
-        //const formattedDates = {}
-
-        // Extract YYYY-MM-DD
-        let selectedDate = day.dateString; 
+        let selectedDate = day.dateString;
         
         // Business rules:
-        // Check if the date has already passed
         // Add three weeks
         // Check if first date or last date conflicts with any current dates
 
-        // Add formatting
-        //formattedDates[selectedDate] = { startingDay: true, endingDay: true, selected: true, color: 'blue', textColor: 'white' }
-        //console.log(formattedDates);
+        // Add three weeks
 
-        setMarkedDates({...markedDates, [day.dateString]: { startingDay: true, endingDay: true, selected: true, color: '#415CE0', textColor: 'white' }}); // Add to array
+        // Append markedDates with selected dates
+        setMarkedDates({...markedDates, [selectedDate]: { startingDay: true, endingDay: true, color: '#415CE0', textColor: 'white' }}); // Add to array
     };
 
     return (
@@ -86,8 +81,9 @@ const Schedule = ({ navigation, route }) => {
             <Calendar 
                 // Initially visible month. Default = Date()
                 current = { Date() }
-                // Handler which gets executed on day press. Default = undefined
-                //onDayPress = {(day) => {console.log('selected day', day)}}
+                // Minimum date that can be selected. Dates before minDate will be grayed out.
+                minDate = { Date() }
+                // Handler which gets executed on day press. 
                 onDayPress = { renderSelectedDates }
                 // Hide month navigation arrows. Default = false
                 hideArrows = { false }
@@ -99,15 +95,11 @@ const Schedule = ({ navigation, route }) => {
                  // Do not show days of other months in month page. Default = false
                 hideExtraDays = { true }
                 // Disable all touch events for disabled days. can be override with disableTouchEvent in markedDates
-                disableAllTouchEventsForDisabledDays={true}
+                disableAllTouchEventsForDisabledDays = { true }
                  // Enable the option to swipe between months. Default = false
                 enableSwipeMonths = { true }
                 markingType = { 'period' }
                 markedDates = { markedDates }
-                theme = {{
-                    textSectionTitleDisabledColor: '#red',
-                    textDisabledColor: '#green',
-                }}
             />
         </View>
     );
