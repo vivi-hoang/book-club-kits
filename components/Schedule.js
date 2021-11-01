@@ -1,7 +1,7 @@
 // ./components/Calendar.js
 
 import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 import { loggingOut } from '../firebase/FirebaseHelpers';
@@ -9,7 +9,7 @@ import { loggingOut } from '../firebase/FirebaseHelpers';
 // Calendar dependency
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import { Feather } from "@expo/vector-icons";
-import dateFns from 'date-fns';
+import { addWeeks, addYears, format, parseISO } from 'date-fns';
 
 import styles from '../styling/Styles';
 
@@ -19,7 +19,6 @@ const Schedule = ({ navigation, route }) => {
     const item = route.params;
     const reservedDates = item.reservedDates;
 
-    //const [selectedDay, setSelectedDay] = useState({})
     const [markedDates, setMarkedDates] = useState({});
 
     // Display a books' unavailable dates on calendar
@@ -49,27 +48,75 @@ const Schedule = ({ navigation, route }) => {
                     let date = datesArr[i].dates[j];
                     formattedDates[date] = { disabled: true, disableTouchEvent: true, color: '#6A6E72', textColor: 'white' }
                 }
-
             }
         }
 
         setMarkedDates(formattedDates);
       
-    }, [ ]); // This useEffect is called only once, the first time the component renders.
+    }, []); // This useEffect is called only once, the first time the component renders.
 
+    // Highlight selected dates onPress
     const renderSelectedDates = (day) => {
         console.log('selected day', day)
-        let selectedDate = day.dateString;
+        let selectedDayStart = day.dateString;
+        let parsedDate = parseISO(selectedDayStart);
         
-        // Business rules:
-        // Add three weeks
-        // Check if first date or last date conflicts with any current dates
+        // Add three weeks and format date as YYY-MM-DD
+        let selectedDayEnd = convert(addWeeks(parsedDate, 3));
+        console.log('selectedDayEnd', selectedDayEnd);
 
-        // Add three weeks
+        // Check if selected dates conflict with current checkout dates
+        let overlapping = datesOverlap(selectedDayStart, selectedDayEnd);
 
-        // Append markedDates with selected dates
-        setMarkedDates({...markedDates, [selectedDate]: { startingDay: true, endingDay: true, color: '#415CE0', textColor: 'white' }}); // Add to array
+        if (overlapping) {
+            showAlert();
+        } else {
+            // Append markedDates with selected dates
+            setMarkedDates({...markedDates, [selectedDayStart]: { startingDay: true, endingDay: true, color: '#415CE0', textColor: 'white' }});
+        }        
     };
+
+    // Check if first date or last date conflicts with any current checkout dates
+    const datesOverlap = (startDate, endDate) => {        
+        
+        // Iterate through Firebase reservedDates to create array of the checkout date sets
+        const dateSetArr = [];
+        reservedDates.forEach(dateSet => {          
+            dateSetArr.push({
+                dates: dateSet.dates,
+            });
+        })
+
+        // Iterate through date sets to extract individual dates and create array of the dates
+        const datesArr = [];
+        dateSetArr.forEach(dateSet => {
+            for (let i = 0; i < dateSet.dates.length; i++) {
+                datesArr.push(dateSet.dates[i]);
+            }
+        })
+
+        // Iterate through array of dates and compare against startDate and endDate
+        // Return true if start date or end date match any dates in reservedDates
+        let overlapping = false;
+        for (let i = 0; i < datesArr.length; i++) {           
+            if (datesArr[i] === startDate || datesArr[i] === endDate) {
+                overlapping = true;
+            } 
+        }
+        return overlapping; 
+    }
+
+    const showAlert = () => {
+        alert(
+            'You have chosen a start date or checkout period that conflicts with existing reservations. Please choose another start date.'
+        );
+    }
+    
+    // Format generated dates as YYYY-MM-DD
+    const convert = (date) => format(date, 'yyyy-MM-dd');
+
+    // Variable to hold today's date
+    const today = new Date();
 
     return (
         
@@ -80,9 +127,11 @@ const Schedule = ({ navigation, route }) => {
             </View>
             <Calendar 
                 // Initially visible month. Default = Date()
-                current = { Date() }
+                current = { today }
                 // Minimum date that can be selected. Dates before minDate will be grayed out.
-                minDate = { Date() }
+                minDate = { today }
+                // Maximum date that can be selected. Dates after maxDate will be grayed out.
+                maxDate = { addYears(today, 1) } // One year from today
                 // Handler which gets executed on day press. 
                 onDayPress = { renderSelectedDates }
                 // Hide month navigation arrows. Default = false
