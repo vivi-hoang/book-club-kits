@@ -28,7 +28,7 @@ const Home = ({ navigation }) => {
                         key: documentSnapshot.id
                     });
                 });
-            
+    
                 setBooks(retrievedBooks);
                 setLoading(false);
             });        

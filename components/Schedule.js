@@ -9,7 +9,7 @@ import { loggingOut } from '../firebase/FirebaseHelpers';
 // Calendar dependency
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import { Feather } from "@expo/vector-icons";
-import { addWeeks, addYears, format, parseISO } from 'date-fns';
+import { addDays, addWeeks, addYears, format, parseISO } from 'date-fns';
 
 import styles from '../styling/Styles';
 
@@ -68,13 +68,42 @@ const Schedule = ({ navigation, route }) => {
         // Check if selected dates conflict with current checkout dates
         let overlapping = datesOverlap(selectedDayStart, selectedDayEnd);
 
+        // If the user chooses invalid dates (i.e., they overlap with current checkouts)
+        // display an alert prompting user to choose again
         if (overlapping) {
             showAlert();
+        // Else append markedDates with selected dates
         } else {
-            // Append markedDates with selected dates
+            const checkoutPeriod = threeWeeks(selectedDayStart);
             setMarkedDates({...markedDates, [selectedDayStart]: { startingDay: true, endingDay: true, color: '#415CE0', textColor: 'white' }});
         }        
     };
+
+    // Generate object holding 21 days / 3 weeks' worth of dates with calendar formatting
+    const threeWeeks = (startDate) => {
+        
+        const formattedDates = {};
+        const parsedStartDate = parseISO(startDate);
+
+        for (let i = 1; i < 22; i++) {
+            if (i === 1) {
+                formattedDates[startDate] = { startingDay: true, color: '#415CE0', textColor: 'white' };
+                console.log('i =', i);
+                console.log('startDate = ', startDate);
+            } else if (i === 21) {
+                const date = convert(addDays(parsedStartDate, i));
+                formattedDates[date] = { endingDay: true, color: '#415CE0', textColor: 'white' };
+                console.log('i =', i);
+                console.log('date = ', date);
+            } else {
+                const date = convert(addDays(parsedStartDate, i));
+                formattedDates[date] = { color: '#415CE0', textColor: 'white' };
+                console.log('i =', i);
+                console.log('date = ', date);
+            }
+        }
+        console.log('selected checkout period', formattedDates);
+    }
 
     // Check if first date or last date conflicts with any current checkout dates
     const datesOverlap = (startDate, endDate) => {        
