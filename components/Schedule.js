@@ -57,13 +57,11 @@ const Schedule = ({ navigation, route }) => {
 
     // Highlight selected dates onPress
     const renderSelectedDates = (day) => {
-        console.log('selected day', day)
         let selectedDayStart = day.dateString;
         let parsedDate = parseISO(selectedDayStart);
         
         // Add three weeks and format date as YYY-MM-DD
         let selectedDayEnd = convert(addWeeks(parsedDate, 3));
-        console.log('selectedDayEnd', selectedDayEnd);
 
         // Check if selected dates conflict with current checkout dates
         let overlapping = datesOverlap(selectedDayStart, selectedDayEnd);
@@ -74,8 +72,11 @@ const Schedule = ({ navigation, route }) => {
             showAlert();
         // Else append markedDates with selected dates
         } else {
+            // Generate three-week checkout period with calendar formatting
             const checkoutPeriod = threeWeeks(selectedDayStart);
-            setMarkedDates({...markedDates, [selectedDayStart]: { startingDay: true, endingDay: true, color: '#415CE0', textColor: 'white' }});
+
+            // Display selected checkout period (in different color)
+            setMarkedDates({...markedDates, ...checkoutPeriod});
         }        
     };
 
@@ -85,24 +86,18 @@ const Schedule = ({ navigation, route }) => {
         const formattedDates = {};
         const parsedStartDate = parseISO(startDate);
 
-        for (let i = 1; i < 22; i++) {
-            if (i === 1) {
+        for (let i = 0; i < 21; i++) {
+            if (i === 0) {
                 formattedDates[startDate] = { startingDay: true, color: '#415CE0', textColor: 'white' };
-                console.log('i =', i);
-                console.log('startDate = ', startDate);
-            } else if (i === 21) {
+            } else if (i === 20) {
                 const date = convert(addDays(parsedStartDate, i));
                 formattedDates[date] = { endingDay: true, color: '#415CE0', textColor: 'white' };
-                console.log('i =', i);
-                console.log('date = ', date);
             } else {
                 const date = convert(addDays(parsedStartDate, i));
                 formattedDates[date] = { color: '#415CE0', textColor: 'white' };
-                console.log('i =', i);
-                console.log('date = ', date);
             }
         }
-        console.log('selected checkout period', formattedDates);
+        return formattedDates;
     }
 
     // Check if first date or last date conflicts with any current checkout dates
@@ -153,6 +148,9 @@ const Schedule = ({ navigation, route }) => {
             <View style = {styles.titleContainer}>
                 <Text style = {styles.itemTitle}>{ item.title }</Text>
                 <Text>by { item.authorFirstName } { item.authorLastName }</Text>
+                <Text style = {styles.instructions}>To reserve a kit, first <b>make sure you are logged in.</b> Tap on the start date of the three-week checkout period you'd like for the book club kit. (Grayed-out dates indicate
+                    the kit is unavailable then.)
+                </Text>
             </View>
             <Calendar 
                 // Initially visible month. Default = Date()
