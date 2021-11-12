@@ -16,10 +16,50 @@ import styles from '../styling/Styles';
 // Destructure navigation; passed as a property to the component.
 const Schedule = ({ navigation, route }) => {
 
+    // For displaying a book's already reserved dates
     const item = route.params;
     const reservedDates = item.reservedDates;
-
     const [markedDates, setMarkedDates] = useState({});
+
+    // Allows ID of current sign-in user
+    let currentUserUID = firebase.auth().currentUser.uid;
+    const [firstName, setFirstName] = useState('');
+    const [userRole, setUserRole] = useState('');
+
+    // Retrieves user info from Firebase
+    useEffect(() => {
+        
+        // isMounted addresses error "Can't perform a React state update on an unmounted component"
+        let isMounted = true;
+
+        // Retrieve data from Firestore using query methods in doc
+        async function getUserInfo() {
+
+            if (isMounted) {
+                let doc = await firebase
+                    .firestore()
+                    .collection('users')
+                    .doc(currentUserUID)
+                    .get();
+        
+                if (!doc.exists){
+                    Alert.alert('No user data found!')
+                } else {
+                    // Retrieve data as key-value pair
+                    let user = doc.data();
+                    //console.log('Firebase UID: ' + currentUserUID);
+                    //console.log('Name: ' + user.firstName + ' ' + user.lastName);
+                    //console.log('Email: ' + user.email);
+                    //console.log('Role: ' + user.role);
+                    
+                    setFirstName(user.firstName);
+                    //setUserRole(user.role);
+                }
+            }
+        }
+        getUserInfo();
+        return () => { isMounted = false };
+    }) // This useEffect is called every time component renders
 
     // Display a books' unavailable dates on calendar
     useEffect(() => {
@@ -69,7 +109,7 @@ const Schedule = ({ navigation, route }) => {
         // If the user chooses invalid dates (i.e., they overlap with current checkouts)
         // display an alert prompting user to choose again
         if (overlapping) {
-            showAlert();
+            conflictingDateAlert();
         // Else append markedDates with selected dates
         } else {
             // Generate three-week checkout period with calendar formatting
@@ -77,6 +117,12 @@ const Schedule = ({ navigation, route }) => {
 
             // Display selected checkout period (in different color)
             setMarkedDates({...markedDates, ...checkoutPeriod});
+
+             // Display alert confirming stsart and end date
+            setTimeout(() => {
+                confirmReservationAlert(selectedDayStart, selectedDayEnd);
+            }, 500);
+
         }        
     };
 
@@ -130,9 +176,24 @@ const Schedule = ({ navigation, route }) => {
         return overlapping; 
     }
 
-    const showAlert = () => {
+    const conflictingDateAlert = () => {
         alert(
             'You have chosen a start date or checkout period that conflicts with existing reservations. Please choose another start date.'
+        );
+    }
+
+    const confirmReservationAlert = (startDate, endDate) => {
+
+        // Reformat dates to be patron-friendly
+        // M-D-Y with day
+
+        alert(
+            `You have chosen a checkout period starting on ${startDate} and ending on ${endDate}. Would you like to go forward with this reservation?`,
+            [
+                {text: 'Yes', onPress: () => console.log('Yes button clicked.')},
+                {text: 'No', onPress: () => console.log('No button clicked.')},
+            ],
+            { cancelable: true }
         );
     }
     
@@ -142,9 +203,25 @@ const Schedule = ({ navigation, route }) => {
     // Variable to hold today's date
     const today = new Date();
 
+    // Greeting at the top of the page
+    const greeting = (firstName) => {
+        if (firstName != '') {
+            return (
+                <Text style={styles.text}>Hi, {firstName}</Text>
+            )
+        } else {
+            return (
+                <Text style={styles.text}>You are not logged in.</Text>
+            )
+        }        
+    };
+
     return (
         
         <View style = {styles.container}>
+
+            { greeting(firstName) }
+
             <View style = {styles.titleContainer}>
                 <Text style = {styles.itemTitle}>{ item.title }</Text>
                 <Text>by { item.authorFirstName } { item.authorLastName }</Text>
