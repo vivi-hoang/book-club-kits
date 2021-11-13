@@ -1,35 +1,24 @@
-// ./components/CreateKitRecord.js
+// ./components/ReservationForm.js
 
 import React, { useEffect, useState } from 'react';
 import { Text, View, TextInput, Alert, ScrollView, Keyboard, SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { storeBook } from '../firebase/FirebaseHelpers';
 
 import styles from '../styling/Styles';
 
 // Destructure navigation; passed as a property to the component.
-const CreateKitRecord = ({ navigation }) => {
+const ReservationForm = ({ navigation, route }) => {
 
-    const [title, setTitle] = useState('');
-    const [authorFirstName, setAuthorFirstName] = useState('');
-    const [authorLastName, setAuthorLastName] = useState('');
-    const [genre, setGenre] = useState('');
-    const [ageGroup, setAgeGroup] = useState('');
-    const [kitContents, setKitContents] = useState('');
-    const [location, setLocation] = useState('');
-    const [synopsis, setSynopsis] = useState('');
+    const [title, setTitle] = useState();
+    const [author, setAuthor] = useState();
+    const [homeLibrary, setHomeLibrary] = useState();
+    const [patronName, setPatronName] = useState();
+    const [patronPhone, setPatronPhone] = useState();
+    const [pickupLibrary, setPickupLibrary] = useState();
+    const [pickupDate, setPickupDate] = useState();
+    const [dueDate, setDueDate] = useState();
 
-    const emptyState = () => {
-        setTitle('');
-        setAuthorFirstName('');
-        setAuthorLastName('');
-        setGenre('');
-        setAgeGroup('');
-        setKitContents('');
-        setLocation('');
-        setSynopsis('');
-    };
-
+    // REWRITE THIS TO STORE TO FIREBASE AS A RESERVATION
     const handlePress = () => {
         // Entered info passed in as arguments to storeBook function
         storeBook(
@@ -47,7 +36,7 @@ const CreateKitRecord = ({ navigation }) => {
     }
 
     return (
-        // CREATE KIT RECORD FORM
+        // RESERVATION FORM
         <SafeAreaView style = { styles.container }>
 
             <ScrollView onBlur = { Keyboard.dismiss }>               
@@ -118,4 +107,4 @@ const CreateKitRecord = ({ navigation }) => {
 
 }
 
-export default CreateKitRecord;
+export default ReservationForm;

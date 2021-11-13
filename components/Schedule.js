@@ -2,14 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { Text, View, Alert } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 import { loggingOut } from '../firebase/FirebaseHelpers';
 
 // Calendar dependency
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import { Feather } from "@expo/vector-icons";
-import { addDays, addWeeks, addYears, format, parseISO } from 'date-fns';
+import { addDays, addYears, format, parseISO } from 'date-fns';
 
 import styles from '../styling/Styles';
 
@@ -25,7 +24,7 @@ const Schedule = ({ navigation, route }) => {
     let currentUserUID = firebase.auth().currentUser.uid;
     const [firstName, setFirstName] = useState('');
     const [userRole, setUserRole] = useState('');
-
+    
     // Retrieves user info from Firebase
     useEffect(() => {
         
@@ -101,7 +100,7 @@ const Schedule = ({ navigation, route }) => {
         let parsedDate = parseISO(selectedDayStart);
         
         // Add three weeks and format date as YYY-MM-DD
-        let selectedDayEnd = convert(addWeeks(parsedDate, 3));
+        let selectedDayEnd = convert(addDays(parsedDate, 20));
 
         // Check if selected dates conflict with current checkout dates
         let overlapping = datesOverlap(selectedDayStart, selectedDayEnd);
@@ -115,10 +114,10 @@ const Schedule = ({ navigation, route }) => {
             // Generate three-week checkout period with calendar formatting
             const checkoutPeriod = threeWeeks(selectedDayStart);
 
-            // Display selected checkout period (in different color)
+            // Update state to display selected checkout period (in different color)
             setMarkedDates({...markedDates, ...checkoutPeriod});
 
-             // Display alert confirming stsart and end date
+             // Display alert confirming start and end date
             setTimeout(() => {
                 confirmReservationAlert(selectedDayStart, selectedDayEnd);
             }, 500);
@@ -176,24 +175,26 @@ const Schedule = ({ navigation, route }) => {
         return overlapping; 
     }
 
+    // Alert displays when patron presses a checkout start date that conflicts with existing reservations
     const conflictingDateAlert = () => {
+
         alert(
-            'You have chosen a start date or checkout period that conflicts with existing reservations. Please choose another start date.'
+            'You have chosen a start date or checkout period that conflicts with existing reservations. Please choose another start date.',
         );
     }
 
+    // Alert displays when user selects a valid checkout period; displays start and end date for confirmation.
     const confirmReservationAlert = (startDate, endDate) => {
 
         // Reformat dates to be patron-friendly
         // M-D-Y with day
+        const parsedStartDate = parseISO(startDate);
+        const parsedEndDate = parseISO(endDate);
+        const formattedStartDate = format(parsedStartDate, 'EEEE, LLLL dd, yyyy');
+        const formattedEndDate = format(parsedEndDate, 'EEEE, LLLL dd, yyyy');
 
-        alert(
-            `You have chosen a checkout period starting on ${startDate} and ending on ${endDate}. Would you like to go forward with this reservation?`,
-            [
-                {text: 'Yes', onPress: () => console.log('Yes button clicked.')},
-                {text: 'No', onPress: () => console.log('No button clicked.')},
-            ],
-            { cancelable: true }
+        alert(            
+            `You've chosen a checkout period starting on ${formattedStartDate} and ending on ${formattedEndDate}. You'll now be taken to a form to complete your reservation.`,
         );
     }
     
