@@ -1,7 +1,7 @@
 // ./components/Calendar.js
 
 import React, { useEffect, useState } from 'react';
-import { Text, View, Alert } from 'react-native';
+import { Text, View, Alert, Button } from 'react-native';
 import firebase from 'firebase/app';
 import { loggingOut } from '../firebase/FirebaseHelpers';
 
@@ -20,10 +20,15 @@ const Schedule = ({ navigation, route }) => {
     const reservedDates = item.reservedDates;
     const [markedDates, setMarkedDates] = useState({});
 
-    // Allows ID of current sign-in user
+    // ID current sign-in user
     let currentUserUID = firebase.auth().currentUser.uid;
     const [firstName, setFirstName] = useState('');
-    const [userRole, setUserRole] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+
+    // To pass to Reservation Form
+    const [pickupDate, setPickupDate] = useState('');
+    const [dueDate, setDueDate] = useState('');
     
     // Retrieves user info from Firebase
     useEffect(() => {
@@ -52,6 +57,8 @@ const Schedule = ({ navigation, route }) => {
                     //console.log('Role: ' + user.role);
                     
                     setFirstName(user.firstName);
+                    setLastName(user.lastName);
+                    setEmail(user.email);
                     //setUserRole(user.role);
                 }
             }
@@ -116,6 +123,10 @@ const Schedule = ({ navigation, route }) => {
 
             // Update state to display selected checkout period (in different color)
             setMarkedDates({...markedDates, ...checkoutPeriod});
+
+            // Update state with checkout start and end dates
+            setPickupDate(selectedDayStart);
+            setDueDate(selectedDayEnd);
 
              // Display alert confirming start and end date
             setTimeout(() => {
@@ -195,7 +206,28 @@ const Schedule = ({ navigation, route }) => {
 
         alert(            
             `You've chosen a checkout period starting on ${formattedStartDate} and ending on ${formattedEndDate}. You'll now be taken to a form to complete your reservation.`,
+            [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ],
         );
+    }
+
+    // Handle patron confirmation to be taken to reservation form with necessary data
+    const toReservationForm = () => {
+
+        console.log('pickupDate', pickupDate);
+        console.log('dueDate', dueDate);
+
+        navigation.navigate('Reservation Form', { 
+            title: item.title,
+            authorFirstName: item.authorFirstName,
+            authorLastName: item.authorLastName,
+            patronFirstName: firstName,
+            patronLastName: lastName,
+            patronEmail: email,
+            startDate: pickupDate,
+            endDate: dueDate,
+        })
     }
     
     // Format generated dates as YYYY-MM-DD
@@ -205,7 +237,7 @@ const Schedule = ({ navigation, route }) => {
     const today = new Date();
 
     // Greeting at the top of the page
-    const greeting = (firstName) => {
+    const greeting = (firstName, lastName) => {
         if (firstName != '') {
             return (
                 <Text style={styles.text}>Hi, {firstName}</Text>
@@ -229,6 +261,12 @@ const Schedule = ({ navigation, route }) => {
                 <Text style = {styles.instructions}>To reserve a kit, first <b>make sure you are logged in.</b> Tap on the start date of the three-week checkout period you'd like for the book club kit. (Grayed-out dates indicate
                     the kit is unavailable then.)
                 </Text>
+
+                <Button
+                    title="Go to Reservation Form"
+                    onPress={() => toReservationForm()}
+                />
+
             </View>
             <Calendar 
                 // Initially visible month. Default = Date()

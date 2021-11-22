@@ -29,6 +29,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontStyle: 'italic',
     },
+    instructions: {
+        fontSize: 13,
+        marginTop: 5,
+    },
     button: {
         alignItems: 'center',
         backgroundColor: '#6B591D',

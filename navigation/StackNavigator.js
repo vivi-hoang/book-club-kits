@@ -17,6 +17,7 @@ import CreateKitRecord from '../components/CreateKitRecord';
 import Collection from '../components/Collection';
 import BookRecord from '../components/BookRecord';
 import Schedule from '../components/Schedule';
+import ReservationForm from '../components/ReservationForm';
 
 const Stack = createStackNavigator();
 
@@ -55,52 +56,46 @@ const MainStackNavigator = () => {
             <Stack.Screen 
                 name = 'Home'
                 component = { Home } 
-                // options = {{ headerShown: false }}
             />
             <Stack.Screen
                 name = 'Sign Up'
                 component = { SignUp }
-                // options = {{ headerShown: false }}
             />
             <Stack.Screen
                 name = 'Sign In'
                 component = { SignIn }
-                //options = {{ headerShown: false }}
             />
             <Stack.Screen
                 name = 'Dashboard'
                 component = { Dashboard }
-                //options = {{ headerShown: false }}
             />
             <Stack.Screen
                 name = 'User List'
                 component = { UserList }
-                //options = {{ headerShown: false }}
             />
             <Stack.Screen
                 name = 'User Record'
                 component = { UserRecord }
-                //options = {{ headerShown: false }}
             />
             <Stack.Screen
                 name = 'Create Kit Record'
                 component = { CreateKitRecord }
-                //options = {{ headerShown: false }}
             />
             <Stack.Screen
                 name = 'Collection'
                 component = { Collection }
-                //options = {{ headerShown: false }}
             />
             <Stack.Screen
                 name = 'Book Record'
                 component = { BookRecord }
-                //options = {{ headerShown: false }}
             />
             <Stack.Screen
                 name = 'Schedule'
                 component = { Schedule }
-                //options = {{ headerShown: false }}
+            />
+            <Stack.Screen
+                name = 'Reservation Form'
+                component = { ReservationForm }
             />
         </Stack.Navigator>
     );

@@ -14,6 +14,7 @@ const Dashboard = ({ navigation }) => {
     // Allows ID of current sign-in user
     let currentUserUID = firebase.auth().currentUser.uid;
     const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [userRole, setUserRole] = useState('');
 
     // For displaying book club kit collection
@@ -115,7 +116,7 @@ const Dashboard = ({ navigation }) => {
                             })
                         }
                     >
-                        <Text style = { styles.buttonText}>View Availability</Text>
+                        <Text style = { styles.buttonText }>View Availability</Text>
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>
@@ -127,8 +128,6 @@ const Dashboard = ({ navigation }) => {
         if (userRole === 'patron') {
             return (
                 <View>
-                    <Text style={styles.titleText}>THIS IS THE PATRON DASHBOARD</Text>
-
                     <FlatList
                         data = { books }
                         renderItem = { renderBookCard }
@@ -142,7 +141,6 @@ const Dashboard = ({ navigation }) => {
         if (userRole === 'staff' || userRole === 'admin') {
             return (
                 <View>
-                    <Text style={styles.titleText}>THIS IS THE STAFF DASHBOARD</Text>
                     <TouchableOpacity 
                         style = { styles.button }
                         onPress = {() => navigation.navigate('Collection')}
