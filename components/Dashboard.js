@@ -112,7 +112,7 @@ const Dashboard = ({ navigation }) => {
                                 title: item.title,
                                 authorFirstName: item.authorFirstName,
                                 authorLastName: item.authorLastName,
-                                reservedDates: item.reservedDates,
+                                reservations: item.reservations,
                             })
                         }
                     >

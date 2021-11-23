@@ -17,7 +17,7 @@ const Schedule = ({ navigation, route }) => {
 
     // For displaying a book's already reserved dates
     const item = route.params;
-    const reservedDates = item.reservedDates;
+    const reservations = item.reservations;
     const [markedDates, setMarkedDates] = useState({});
 
     // ID current sign-in user
@@ -73,7 +73,7 @@ const Schedule = ({ navigation, route }) => {
         const formattedDates = {}
 
         // Iterate through reservation to create array of the date ranges saved to this title
-        reservedDates.forEach(dateSet => {
+        reservations.forEach(dateSet => {
             datesArr.push({
                 dates: dateSet.dates,
             });
@@ -155,9 +155,9 @@ const Schedule = ({ navigation, route }) => {
     // Check if first date or last date conflicts with any current checkout dates
     const datesOverlap = (startDate, endDate) => {        
         
-        // Iterate through Firebase reservedDates to create array of the checkout date sets
+        // Iterate through Firebase reservations to create array of the checkout date sets
         const dateSetArr = [];
-        reservedDates.forEach(dateSet => {          
+        reservations.forEach(dateSet => {          
             dateSetArr.push({
                 dates: dateSet.dates,
             });
@@ -172,7 +172,7 @@ const Schedule = ({ navigation, route }) => {
         })
 
         // Iterate through array of dates and compare against startDate and endDate
-        // Return true if start date or end date match any dates in reservedDates
+        // Return true if start date or end date match any dates in reservations
         let overlapping = false;
         for (let i = 0; i < datesArr.length; i++) {           
             if (datesArr[i] === startDate || datesArr[i] === endDate) {

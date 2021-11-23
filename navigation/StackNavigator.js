@@ -18,6 +18,7 @@ import Collection from '../components/Collection';
 import BookRecord from '../components/BookRecord';
 import Schedule from '../components/Schedule';
 import ReservationForm from '../components/ReservationForm';
+import ReservationConfirmation from '../components/ReservationConfirmation';
 
 const Stack = createStackNavigator();
 
@@ -96,6 +97,10 @@ const MainStackNavigator = () => {
             <Stack.Screen
                 name = 'Reservation Form'
                 component = { ReservationForm }
+            />
+            <Stack.Screen
+                name = 'Reservation Confirmation'
+                component = { ReservationConfirmation }
             />
         </Stack.Navigator>
     );

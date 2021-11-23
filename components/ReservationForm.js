@@ -73,21 +73,34 @@ const ReservationForm = ({ navigation, route }) => {
             patronID: patronID,
             patronPhone: patronPhone,
             patronEmail: patronEmail,
-        }
-        console.log('reservationObj', reservationObj);
+        }        
 
         return reservationObj;
     }
 
-    // REWRITE THIS TO STORE TO FIREBASE AS A RESERVATION
-    const handlePress = () => {
+    // Write reservation to Firebase and navigate to confirmation page
+    const handlePress = () => {        
         
         // Generation object to hold reservation details
         const reservationObj = createReservation(startDate);
+        console.log('reservationObj', reservationObj);
 
         // Write reservation to Firebase
         storeCheckout(bookID, reservationObj);
 
+        // Proceed to confirmation page
+        navigation.navigate('Reservation Confirmation', { 
+            title: title,
+            authorFirstName: authorFirstName,
+            authorLastName: authorLastName,
+            patronFirstName: patronFirstName,
+            patronLastName: patronLastName,
+            patronEmail: patronEmail,
+            patronPhone: patronPhone,
+            startDate: pickupDate,
+            endDate: dueDate,
+            pickupLibrary: pickupLibrary
+        })
     }
 
     return (
@@ -96,9 +109,7 @@ const ReservationForm = ({ navigation, route }) => {
 
             <ScrollView onBlur = { Keyboard.dismiss }>               
             
-                <Text>Patron ID: { patronID }</Text>
                 <Text>Book club kit reservation for: </Text>
-                <Text>{ bookID }</Text>
                 <Text><b><i>{ title }</i> by { authorFirstName } { authorLastName }</b></Text>
                 <Text>&nbsp;</Text>
 
