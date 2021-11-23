@@ -101,6 +101,7 @@ const MainStackNavigator = () => {
             <Stack.Screen
                 name = 'Reservation Confirmation'
                 component = { ReservationConfirmation }
+                options = {{ headerLeft: () => null }} // Hide back button on Reservation Confirmation screen
             />
         </Stack.Navigator>
     );

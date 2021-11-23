@@ -43,9 +43,9 @@ const ReservationConfirmation = ({ navigation, route }) => {
                 <Text><b>Name</b>: { patronFirstName } { patronLastName }</Text>
                 <Text><b>Email</b>: { patronEmail }</Text>
                 <Text><b>Phone</b>: { patronPhone}</Text>
-                <Text><b>Pickup Date</b>: { startDate }</Text>
-                <Text><b>Due Date</b>: { endDate }</Text>
                 <Text><b>Pickup Library</b>: { pickupLibrary }</Text>
+                <Text><b>Pickup Date</b>: { startDate }</Text>
+                <Text><b>Due Date</b>: { endDate }</Text>                
                 
                 <TouchableOpacity style = { styles.button } onPress = { handlePress }>
                     <Text style = { styles.buttonText }>Return to Home</Text>
