@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, TextInput, Alert, ScrollView, Keyboard, SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+// Calendar dependency
+import { addDays, addYears, format, parseISO } from 'date-fns';
+
 import styles from '../styling/Styles';
 
 // For dropdown
@@ -15,6 +18,7 @@ const ReservationForm = ({ navigation, route }) => {
     // For handling data passed from Schedule
     const item = route.params;
     const title = item.title;
+    const id = item.id;
     const authorFirstName = item.authorFirstName;
     const authorLastName = item.authorLastName;
     const patronFirstName = item.patronFirstName;
@@ -23,14 +27,36 @@ const ReservationForm = ({ navigation, route }) => {
     const startDate = item.startDate;
     const endDate = item.endDate;
 
-    //const [title, setTitle] = useState();
-    //const [authorFirstName, setAuthorFirstName] = useState();
-    //const [authorLastName, setAuthorLastName] = useState();
-    //const [patronName, setPatronName] = useState();
-    const [patronPhone, setPatronPhone] = useState();
-    const [pickupLibrary, setPickupLibrary] = useState();
-    const [pickupDate, setPickupDate] = useState();
-    const [dueDate, setDueDate] = useState();
+    const [patronPhone, setPatronPhone] = useState('');
+    const [pickupLibrary, setPickupLibrary] = useState('');
+    const [pickupDate, setPickupDate] = useState('');
+    const [dueDate, setDueDate] = useState('');
+
+    // Parse and format incoming start and end dates
+    useEffect(() => {
+        const parsedStartDate = parseISO(startDate);
+        const parsedEndDate = parseISO(endDate);
+        const formattedStartDate = format(parsedStartDate, 'EEEE, LLLL dd, yyyy');
+        const formattedEndDate = format(parsedEndDate, 'EEEE, LLLL dd, yyyy');
+
+        setPickupDate(formattedStartDate);
+        setDueDate(formattedEndDate);
+
+    }, []); // This useEffect is called only once, the first time the component renders.
+
+    /**
+    const formatDate = (date) => {
+        // Reformat dates to be patron-friendly
+        // M-D-Y with day
+        const parsedDate = parseISO(date);
+        console.log('Reservation Form parsedDate', parsedDate);
+
+        const formattedDate = format(date, 'EEEE, LLLL dd, yyyy');
+        console.log('Reservation Form formattedDate', formattedDate);
+
+        return formattedDate;
+    }
+    */
 
     // REWRITE THIS TO STORE TO FIREBASE AS A RESERVATION
     const handlePress = () => {
@@ -55,7 +81,8 @@ const ReservationForm = ({ navigation, route }) => {
 
             <ScrollView onBlur = { Keyboard.dismiss }>               
             
-                <Text>Reservation for the book club kit for: </Text>
+                <Text>Book club kit reservation for: </Text>
+                <Text>{ id }</Text>
                 <Text><b><i>{ title }</i> by { authorFirstName } { authorLastName }</b></Text>
                 <Text>&nbsp;</Text>
 
@@ -102,9 +129,9 @@ const ReservationForm = ({ navigation, route }) => {
                     </Picker>
                 </Text>
                 
-                <Text><b>Pickup Date</b>: { startDate }</Text>
+                <Text><b>Pickup Date</b>: { pickupDate }</Text>
 
-                <Text><b>Due Date</b>: { endDate }</Text>
+                <Text><b>Due Date</b>: { dueDate }</Text>
                 
                 <TouchableOpacity style = { styles.button } onPress = { handlePress }>
                     <Text style = { styles.buttonText }>Reserve Kit</Text>

@@ -27,6 +27,7 @@ const Schedule = ({ navigation, route }) => {
     const [email, setEmail] = useState('');
 
     // To pass to Reservation Form
+    const bookID = route.params.id; // Book ID in Firebase
     const [pickupDate, setPickupDate] = useState('');
     const [dueDate, setDueDate] = useState('');
     
@@ -121,17 +122,18 @@ const Schedule = ({ navigation, route }) => {
             // Generate three-week checkout period with calendar formatting
             const checkoutPeriod = threeWeeks(selectedDayStart);
 
+            // Update state with checkout start and end dates
+            //setPickupDate(selectedDayStart);
+            //setDueDate(selectedDayEnd);
+
             // Update state to display selected checkout period (in different color)
             setMarkedDates({...markedDates, ...checkoutPeriod});
 
-            // Update state with checkout start and end dates
-            setPickupDate(selectedDayStart);
-            setDueDate(selectedDayEnd);
-
-             // Display alert confirming start and end date
+            // Take user to Reservation Form after pause of 1 second
+            // (Ideally get alert working here instead for user to confirm dates to be taken to Reservation Form)
             setTimeout(() => {
-                confirmReservationAlert(selectedDayStart, selectedDayEnd);
-            }, 500);
+                toReservationForm(selectedDayStart, selectedDayEnd);
+            }, 1000);
 
         }        
     };
@@ -194,6 +196,9 @@ const Schedule = ({ navigation, route }) => {
         );
     }
 
+    /** Currently not using this alert because I can't get alerts to work properly on the web;
+     * it will not allow me to provide more than one button, or use onPress.
+     */
     // Alert displays when user selects a valid checkout period; displays start and end date for confirmation.
     const confirmReservationAlert = (startDate, endDate) => {
 
@@ -212,14 +217,12 @@ const Schedule = ({ navigation, route }) => {
         );
     }
 
-    // Handle patron confirmation to be taken to reservation form with necessary data
-    const toReservationForm = () => {
-
-        console.log('pickupDate', pickupDate);
-        console.log('dueDate', dueDate);
+    // Navigation to Reservation Form with necessary data
+    const toReservationForm = (pickupDate, dueDate) => {
 
         navigation.navigate('Reservation Form', { 
             title: item.title,
+            id: bookID,
             authorFirstName: item.authorFirstName,
             authorLastName: item.authorLastName,
             patronFirstName: firstName,
@@ -258,14 +261,14 @@ const Schedule = ({ navigation, route }) => {
             <View style = {styles.titleContainer}>
                 <Text style = {styles.itemTitle}>{ item.title }</Text>
                 <Text>by { item.authorFirstName } { item.authorLastName }</Text>
-                <Text style = {styles.instructions}>To reserve a kit, first <b>make sure you are logged in.</b> Tap on the start date of the three-week checkout period you'd like for the book club kit. (Grayed-out dates indicate
+                <Text style = {styles.instructions}>Tap on the start date of the three-week checkout period you'd like for the book club kit. (Grayed-out dates indicate
                     the kit is unavailable then.)
                 </Text>
 
-                <Button
+                {/*<Button
                     title="Go to Reservation Form"
                     onPress={() => toReservationForm()}
-                />
+                />*/}
 
             </View>
             <Calendar 

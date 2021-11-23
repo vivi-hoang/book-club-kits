@@ -108,7 +108,7 @@ const Dashboard = ({ navigation }) => {
                         style = { styles.button } 
                         onPress={() => 
                             navigation.navigate('Schedule', {
-                                id: item.id,
+                                id: item.key, // Document ID saved to retrievedBooks
                                 title: item.title,
                                 authorFirstName: item.authorFirstName,
                                 authorLastName: item.authorLastName,
