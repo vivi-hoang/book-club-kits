@@ -48,27 +48,31 @@ export function storeBook(title, authorFirstName, authorLastName, genre, ageGrou
             kitContents: kitContents,
             location: location,
             synopsis: synopsis,
-            reservation: [], // Empty array to hold future reservations
+            reservations: [], // Empty array to hold future reservations
         });
 }
 
-export function storeCheckout(title, author, genre, ageGroup, kitContents, location, synopsis) {
+export function storeCheckout(bookID, reservationObj) {
+      
+    /**
+    console.log('bookID', bookID);
     
-    // Create Firestore collection (table) called "books"
-    const db = firebase.firestore();
-    db.collection('books')
-        // Create a document (entry/instance) for which Firestore will auto-generate an ID
-        .doc() 
-        // Pass in data entered by staff as key-value pair
-        .set({
-            title: title,
-            author: author,
-            genre: genre,
-            ageGroup: ageGroup,
-            kitContents: kitContents,
-            location: location,
-            synopsis, synopsis
+    // Retrieves book record from Firebase -- just used for testing
+    firebase.firestore().collection('books').doc(bookID).get()
+        .then((snapshot) => {
+            console.log(snapshot.data());          
+        })
+        .catch(err => {
+            console.log('Error getting documents', err);
         });
+    */
+
+    // Update reservations array field by adding reservation object
+    firebase.firestore().collection('books').doc(bookID).update({
+        reservations: firebase.firestore.FieldValue.arrayUnion(reservationObj),
+        reservedDates: firebase.firestore.FieldValue.arrayUnion(reservationObj),
+    })
+
 }
   
   

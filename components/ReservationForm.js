@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, TextInput, Alert, ScrollView, Keyboard, SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { storeCheckout } from '../firebase/FirebaseHelpers';
 
 // Calendar dependency
 import { addDays, addYears, format, parseISO } from 'date-fns';
@@ -84,23 +85,9 @@ const ReservationForm = ({ navigation, route }) => {
         // Generation object to hold reservation details
         const reservationObj = createReservation(startDate);
 
-        
+        // Write reservation to Firebase
+        storeCheckout(bookID, reservationObj);
 
-        /**
-        // Entered info passed in as arguments to storeBook function
-        storeBook(
-            title,
-            authorFirstName,
-            authorLastName,
-            genre,
-            ageGroup,
-            kitContents,
-            location,
-            synopsis
-        );
-        navigation.navigate('Loading');
-        emptyState();
-        */
     }
 
     return (
