@@ -31,7 +31,28 @@ export async function registration(email, password, lastName, firstName) {
     }
 }
 
-export function storeBook(title, author, genre, ageGroup, kitContents, location, synopsis) {
+export function storeBook(title, authorFirstName, authorLastName, genre, ageGroup, kitContents, location, synopsis) {
+    
+    // Create Firestore collection (table) called "books"
+    const db = firebase.firestore();
+    db.collection('books')
+        // Create a document (entry/instance) for which Firestore will auto-generate an ID
+        .doc() 
+        // Pass in data entered by staff as key-value pair
+        .set({
+            title: title,
+            authorFirstName: authorFirstName,
+            authorLastName: authorLastName,
+            genre: genre,
+            ageGroup: ageGroup,
+            kitContents: kitContents,
+            location: location,
+            synopsis: synopsis,
+            reservation: [], // Empty array to hold future reservations
+        });
+}
+
+export function storeCheckout(title, author, genre, ageGroup, kitContents, location, synopsis) {
     
     // Create Firestore collection (table) called "books"
     const db = firebase.firestore();
@@ -49,6 +70,7 @@ export function storeBook(title, author, genre, ageGroup, kitContents, location,
             synopsis, synopsis
         });
 }
+  
   
 export async function signIn(email, password) {
     try {

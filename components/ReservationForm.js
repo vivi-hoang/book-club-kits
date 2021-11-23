@@ -18,11 +18,12 @@ const ReservationForm = ({ navigation, route }) => {
     // For handling data passed from Schedule
     const item = route.params;
     const title = item.title;
-    const id = item.id;
+    const bookID = item.bookID;
     const authorFirstName = item.authorFirstName;
     const authorLastName = item.authorLastName;
     const patronFirstName = item.patronFirstName;
     const patronLastName = item.patronLastName;
+    const patronID = item.patronID;
     const patronEmail = item.patronEmail;
     const startDate = item.startDate;
     const endDate = item.endDate;
@@ -44,22 +45,48 @@ const ReservationForm = ({ navigation, route }) => {
 
     }, []); // This useEffect is called only once, the first time the component renders.
 
-    /**
-    const formatDate = (date) => {
-        // Reformat dates to be patron-friendly
-        // M-D-Y with day
-        const parsedDate = parseISO(date);
-        console.log('Reservation Form parsedDate', parsedDate);
+    // Format generated dates as YYYY-MM-DD
+    const convert = (date) => format(date, 'yyyy-MM-dd');
 
-        const formattedDate = format(date, 'EEEE, LLLL dd, yyyy');
-        console.log('Reservation Form formattedDate', formattedDate);
+    // Package data up to be appended to book entry in Firebase
+    const createReservation = (startDate) => {
+        let reservationObj = {};
+        const datesArr = [];
 
-        return formattedDate;
+        // Generate array to hold checkout dates
+        const parsedStartDate = parseISO(startDate);
+        for (let i = 0; i < 21; i++) {
+            if (i == 0) {
+                datesArr.push(startDate);
+            } else {
+                const date = convert(addDays(parsedStartDate, i));
+                datesArr.push(date);
+            }
+        }
+        
+        // Populate reservation with patron and checkout details
+        reservationObj = {
+            dates: datesArr,
+            patronFirstName: patronFirstName,
+            patronLastName: patronLastName,
+            patronID: patronID,
+            patronPhone: patronPhone,
+            patronEmail: patronEmail,
+        }
+        console.log('reservationObj', reservationObj);
+
+        return reservationObj;
     }
-    */
 
     // REWRITE THIS TO STORE TO FIREBASE AS A RESERVATION
     const handlePress = () => {
+        
+        // Generation object to hold reservation details
+        const reservationObj = createReservation(startDate);
+
+        
+
+        /**
         // Entered info passed in as arguments to storeBook function
         storeBook(
             title,
@@ -73,6 +100,7 @@ const ReservationForm = ({ navigation, route }) => {
         );
         navigation.navigate('Loading');
         emptyState();
+        */
     }
 
     return (
@@ -81,8 +109,9 @@ const ReservationForm = ({ navigation, route }) => {
 
             <ScrollView onBlur = { Keyboard.dismiss }>               
             
+                <Text>Patron ID: { patronID }</Text>
                 <Text>Book club kit reservation for: </Text>
-                <Text>{ id }</Text>
+                <Text>{ bookID }</Text>
                 <Text><b><i>{ title }</i> by { authorFirstName } { authorLastName }</b></Text>
                 <Text>&nbsp;</Text>
 

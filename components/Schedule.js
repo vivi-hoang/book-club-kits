@@ -28,8 +28,6 @@ const Schedule = ({ navigation, route }) => {
 
     // To pass to Reservation Form
     const bookID = route.params.id; // Book ID in Firebase
-    const [pickupDate, setPickupDate] = useState('');
-    const [dueDate, setDueDate] = useState('');
     
     // Retrieves user info from Firebase
     useEffect(() => {
@@ -74,7 +72,7 @@ const Schedule = ({ navigation, route }) => {
         const datesArr = [];
         const formattedDates = {}
 
-        // Iterate through reservedDates to create array of the date ranges saved to this title
+        // Iterate through reservation to create array of the date ranges saved to this title
         reservedDates.forEach(dateSet => {
             datesArr.push({
                 dates: dateSet.dates,
@@ -121,10 +119,6 @@ const Schedule = ({ navigation, route }) => {
         } else {
             // Generate three-week checkout period with calendar formatting
             const checkoutPeriod = threeWeeks(selectedDayStart);
-
-            // Update state with checkout start and end dates
-            //setPickupDate(selectedDayStart);
-            //setDueDate(selectedDayEnd);
 
             // Update state to display selected checkout period (in different color)
             setMarkedDates({...markedDates, ...checkoutPeriod});
@@ -218,18 +212,19 @@ const Schedule = ({ navigation, route }) => {
     }
 
     // Navigation to Reservation Form with necessary data
-    const toReservationForm = (pickupDate, dueDate) => {
+    const toReservationForm = (startDate, endDate) => {
 
         navigation.navigate('Reservation Form', { 
             title: item.title,
-            id: bookID,
+            bookID: bookID,
             authorFirstName: item.authorFirstName,
             authorLastName: item.authorLastName,
             patronFirstName: firstName,
             patronLastName: lastName,
+            patronID: currentUserUID,
             patronEmail: email,
-            startDate: pickupDate,
-            endDate: dueDate,
+            startDate: startDate,
+            endDate: endDate,
         })
     }
     
