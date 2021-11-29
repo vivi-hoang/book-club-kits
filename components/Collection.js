@@ -9,10 +9,6 @@ import firebase from 'firebase/app';
 import ReactDataGrid from '@inovua/reactdatagrid-community'
 import '@inovua/reactdatagrid-community/index.css'
 
-import ReactFlexyTable from 'react-flexy-table';
-import 'react-flexy-table/dist/index.css';
-import { Feather } from '@expo/vector-icons';
-
 import styles from '../styling/Styles';
 
 // Destructure navigation; passed as a property to the component.
@@ -154,39 +150,6 @@ const Collection = ({ navigation }) => {
     // define grid styles here
     const gridStyle = { minHeight: 550 };
 
-    /**
-    // REACT-FLEXY-TABLE code
-    const columns = [
-        {
-          header: 'Title',
-          key: 'title'
-        },
-        {
-          header: 'Author First Name',
-          key: 'authorFirstName'
-        },
-        {
-            header: 'Author Last Name',
-            key: 'authorLastName'
-        },
-        {
-            header: 'Genre',
-            key: 'genre'
-        },
-        {
-            header: 'Age Group',
-            key: 'ageGroup'
-        },
-        {
-            header: 'Kit Contents',
-            key: 'kitContents'
-        },
-        {
-            header: 'Synopsis',
-            key: 'synopsis'
-        }
-      ]
-    */
 
     return (
         
@@ -203,21 +166,6 @@ const Collection = ({ navigation }) => {
                 style = { gridStyle }
                 defaultFilterValue = { filterValue }
             />
-
-            {/**
-            <View>
-                <ReactFlexyTable 
-                    data = { books } 
-                    sortable
-                    columns = { columns }
-                    nonSortCols = { ['kitContents', 'synopsis'] }
-                    filterable
-                    globalSearch
-                    pageSize = { 50 }
-                    className = 'bookTable'
-                />
-            </View>
-            */}
 
         </View>
 
