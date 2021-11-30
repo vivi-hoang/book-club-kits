@@ -1,4 +1,4 @@
-// ./components/Dashboard.js
+// ./components/MyReservations.js
 
 import React, { useEffect, useState } from 'react';
 import { Text, View, Alert, FlatList } from 'react-native';
@@ -13,17 +13,15 @@ import '@inovua/reactdatagrid-community/index.css'
 import styles from '../styling/Styles';
 
 // Destructure navigation; passed as a property to the component.
-const Dashboard = ({ navigation }) => {
+const MyReservations = ({ navigation }) => {
 
     // Allows ID of current sign-in user
     let currentUserUID = firebase.auth().currentUser.uid;
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [userRole, setUserRole] = useState('');
 
     // For displaying book club kit collection
     const [loading, setLoading] = useState(true); // Set to true on component mount
-    const [books, setBooks] = useState([]); // Initialize to empty array of books
     const [reservationList, setReservationList] = useState([]); // Initialize to empty array of reservations
   
     // Retrieves user info from Firebase
@@ -53,7 +51,7 @@ const Dashboard = ({ navigation }) => {
                     //console.log('Role: ' + user.role);
                     
                     setFirstName(user.firstName);
-                    setUserRole(user.role);
+                    setLastName(user.lastName);
                 }
             }
         }
@@ -79,7 +77,7 @@ const Dashboard = ({ navigation }) => {
                 const retrievedReservations = createReservationList(retrievedBooks);
                 setReservationList(retrievedReservations);
             
-                setBooks(retrievedBooks);
+                //setBooks(retrievedBooks);
                 setLoading(false);
             });        
         return () => subscriber(); // Unsubscribe from events when no longer in use
@@ -90,48 +88,7 @@ const Dashboard = ({ navigation }) => {
       navigation.replace('Book Club Kit Reservations');
     };
 
-    // Handles the display of the books in the FlatList
-    const renderBookCard = ({ item }) => {
-
-        return (
-            <TouchableOpacity onPress = {() =>
-                navigation.navigate('Book Record', { 
-                    title: item.title,
-                    authorFirstName: item.authorFirstName,
-                    authorLastName: item.authorLastName,
-                    genre: item.genre,
-                    ageGroup: item.ageGroup,
-                    kitContents: item.kitContents,
-                    synopsis: item.synopsis,
-                })
-            }>
-                <View style = { styles.listItem }>
-                    <Text style = { styles.itemTitle }>{ item.title }</Text>
-                    <Text><b>Author</b>: { item.authorFirstName } { item.authorLastName }</Text>
-                    <Text><b>Genre</b>: { item.genre }</Text>
-                    <Text><b>Age Group</b>: { item.ageGroup }</Text>
-                    <Text><b>Kit Contents</b>: { item.kitContents }</Text>
-                    <Text><b>Synopsis</b>: { item.synopsis }</Text>
-                    <TouchableOpacity 
-                        style = { styles.button } 
-                        onPress={() => 
-                            navigation.navigate('Schedule', {
-                                id: item.key, // Document ID saved to retrievedBooks
-                                title: item.title,
-                                authorFirstName: item.authorFirstName,
-                                authorLastName: item.authorLastName,
-                                reservations: item.reservations,
-                            })
-                        }
-                    >
-                        <Text style = { styles.buttonText }>View Availability</Text>
-                    </TouchableOpacity>
-                </View>
-            </TouchableOpacity>
-        )
-    }
-
-    // Create an array holding all reservation info
+    // Create an array holding the patron's reservations
     const createReservationList = (bookList) => {
         
         const reservationList = [];
@@ -142,25 +99,29 @@ const Dashboard = ({ navigation }) => {
             // Iterate through each reservations entry
             for (let i = 0; i < book.reservations.length; i++) {
 
-                // generate unique ID for each reservation; this is needed for React Data Grid, which requires an ID
-                const reservationID = reservationList.length;
+                // If the current user's ID matches the patron ID on a reservation
+                if (currentUserUID === book.reservations[i].patronID) {
 
-                let reservation = {
-                    id: reservationID, 
-                    title: book.title,
-                    authorFirstName: book.authorFirstName,
-                    authorLastName: book.authorLastName,
-                    startDate: book.reservations[i].dates[0],
-                    endDate: book.reservations[i].dates[20],
-                    patronFirstName: book.reservations[i].patronFirstName,
-                    patronLastName: book.reservations[i].patronLastName,
-                    patronEmail: book.reservations[i].patronEmail,
-                    patronPhone: book.reservations[i].patronPhone,
-                    pickupLibrary: book.reservations[i].pickupLibrary,
+                    // generate unique ID for each reservation; this is needed for React Data Grid, which requires an ID
+                    const reservationID = reservationList.length;
+
+                    let reservation = {
+                        id: reservationID, 
+                        title: book.title,
+                        authorFirstName: book.authorFirstName,
+                        authorLastName: book.authorLastName,
+                        startDate: book.reservations[i].dates[0],
+                        endDate: book.reservations[i].dates[20],
+                        patronEmail: book.reservations[i].patronEmail,
+                        patronPhone: book.reservations[i].patronPhone,
+                        pickupLibrary: book.reservations[i].pickupLibrary,
+                    }
+
+                    reservationList.push(reservation);
                 }
-                reservationList.push(reservation);
             }       
         })
+        console.log('Patron reservations', reservationList)
         return reservationList;        
     }
     
@@ -196,18 +157,6 @@ const Dashboard = ({ navigation }) => {
             header: 'End Date',
             group: 'checkout',
             width: 100,
-        },
-        { 
-            name: 'patronFirstName', 
-            header: 'First Name',
-            group: 'checkout',        
-            width: 110,
-        },
-        { 
-            name: 'patronLastName', 
-            header: 'Last Name',
-            group: 'checkout',
-            width: 110,
         },
         { 
             name: 'patronPhone', 
@@ -261,16 +210,6 @@ const Dashboard = ({ navigation }) => {
             type: 'string',
         },
         {
-            name: 'patronFirstName',
-            operator: 'contains',
-            type: 'string',
-        },
-        {
-            name: 'patronLastName',
-            operator: 'contains',
-            type: 'string',
-        },
-        {
             name: 'patronPhone',
             operator: 'contains',
             type: 'string',
@@ -297,7 +236,7 @@ const Dashboard = ({ navigation }) => {
     const gridStyle = { minHeight: 550 };
 
     // Display reservation list as a table
-    const renderAllReservations = () => {
+    const renderPatronReservations = () => {
 
         return (        
                 
@@ -315,85 +254,6 @@ const Dashboard = ({ navigation }) => {
 
     }
 
-    // Display different dashboard based on user role
-    const renderPatronDashboard = (userRole) => {
-        if (userRole === 'patron') {
-            return (
-                <View>
-                    <TouchableOpacity 
-                        style = { styles.button }
-                        onPress = {() => navigation.navigate('My Reservations')}
-                    >
-                        <Text style = { styles.buttonText }>My Reservations</Text>
-                    </TouchableOpacity>
-                    <FlatList
-                        data = { books }
-                        renderItem = { renderBookCard }
-                    />
-                </View>
-            );
-        }
-    };
-    
-    const renderStaffDashboard = (userRole) => {
-        if (userRole === 'staff') {
-            return (
-                <View>
-                    <TouchableOpacity 
-                        style = { styles.button }
-                        onPress = {() => navigation.navigate('Collection')}
-                    >
-                        <Text style = { styles.buttonText }>Manage Collection</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style = { styles.button }
-                        onPress = {() => navigation.navigate('Create Kit Record')}
-                    >
-                        <Text style = { styles.buttonText }>Create Kit Record</Text>
-                    </TouchableOpacity>
-
-                    <View style = {styles.titleContainer}>
-                        <Text style = {styles.title}>ALL RESERVATIONS</Text>
-                    </View>
-                    { renderAllReservations() }
-                </View>
-            );
-        }
-    };
-
-    const renderAdminDashboard = (userRole) => {
-        if (userRole === 'admin') {
-            return (
-                <View>
-                    <TouchableOpacity 
-                        style = { styles.button }
-                        onPress = {() => navigation.navigate('Collection')}
-                    >
-                        <Text style = { styles.buttonText }>Manage Collection</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style = { styles.button }
-                        onPress = {() => navigation.navigate('Create Kit Record')}
-                    >
-                        <Text style = { styles.buttonText }>Create Kit Record</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style = { styles.button }
-                        onPress = {() => navigation.navigate('User List')}
-                    >
-                        <Text style = { styles.buttonText }>Manage Users</Text>
-                    </TouchableOpacity>
-
-                    <View style = {styles.titleContainer}>
-                        <Text style = {styles.title}>ALL RESERVATIONS</Text>
-                    </View>
-                    { renderAllReservations() }
-
-                </View>
-            );
-        }
-    };
-
     return (
         <View>
             <View style = { styles.container }>
@@ -404,13 +264,12 @@ const Dashboard = ({ navigation }) => {
                 >
                     <Text style = { styles.buttonText }>Log Out</Text>
                 </TouchableOpacity>
-                { renderPatronDashboard(userRole) }
-                { renderStaffDashboard(userRole) }
-                { renderAdminDashboard(userRole) }
+                <Text style={styles.title}>Reservations for {firstName} {lastName}</Text>
+                { renderPatronReservations() }
             </View>  
         </View>
 
     );
 }
 
-export default Dashboard;
+export default MyReservations;

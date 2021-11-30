@@ -22,7 +22,7 @@ const Loading = ({ navigation }) => {
                 if (user) {
                     navigation.replace('Dashboard');
                 } else {
-                    navigation.replace('Home');
+                    navigation.replace('Book Club Kit Reservations');
                 }
             });
         }

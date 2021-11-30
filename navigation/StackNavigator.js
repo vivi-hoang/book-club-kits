@@ -19,6 +19,7 @@ import BookRecord from '../components/BookRecord';
 import Schedule from '../components/Schedule';
 import ReservationForm from '../components/ReservationForm';
 import ReservationConfirmation from '../components/ReservationConfirmation';
+import MyReservations from '../components/MyReservations';
 
 const Stack = createStackNavigator();
 
@@ -55,7 +56,7 @@ const MainStackNavigator = () => {
                 //options = {{ headerShown: false }}
             />
             <Stack.Screen 
-                name = 'Home'
+                name = 'Book Club Kit Reservations'
                 component = { Home } 
             />
             <Stack.Screen
@@ -69,6 +70,10 @@ const MainStackNavigator = () => {
             <Stack.Screen
                 name = 'Dashboard'
                 component = { Dashboard }
+            />
+            <Stack.Screen
+                name = 'My Reservations'
+                component = { MyReservations }
             />
             <Stack.Screen
                 name = 'User List'

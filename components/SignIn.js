@@ -26,9 +26,7 @@ const SignIn = ({ navigation }) => {
         setEmail('');
         setPassword('');
     };
-  
-
-
+    
     return (
         <View style = { styles.container }>
             <Text style = { styles.text }>Sign in to your account:</Text>

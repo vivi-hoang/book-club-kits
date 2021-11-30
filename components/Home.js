@@ -65,9 +65,9 @@ const Home = ({ navigation }) => {
     return (
         
         <View style = {styles.container}>
-            <View style = {styles.titleContainer}>
+            {/*<View style = {styles.titleContainer}>
                 <Text style = {styles.title}>BOOK CLUB KIT RESERVATIONS</Text>
-            </View>
+            </View>*/}
             
             <View>
             <TouchableOpacity style = {styles.button} onPress={() => navigation.navigate('Sign Up')} >
