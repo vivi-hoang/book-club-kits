@@ -70,7 +70,6 @@ export function storeCheckout(bookID, reservationObj) {
     // Update reservations array field by adding reservation object
     firebase.firestore().collection('books').doc(bookID).update({
         reservations: firebase.firestore.FieldValue.arrayUnion(reservationObj),
-        reservedDates: firebase.firestore.FieldValue.arrayUnion(reservationObj),
     })
 
 }

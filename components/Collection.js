@@ -1,8 +1,8 @@
 // ./components/Collection.js
 
-import React, { useEffect, useState, useRef } from 'react';
-import { Text, View, ActivityIndicator, TextInput } from 'react-native';
-import { BorderlessButton, TouchableOpacity } from 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import { Text, View, ActivityIndicator } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 
 // Table dependencies
@@ -16,6 +16,7 @@ const Collection = ({ navigation }) => {
 
     const [loading, setLoading] = useState(true); // Set to true on component mount
     const [books, setBooks] = useState([]); // Initialize to empty array of books
+    const [reservations, setReservations] = useState([]); // Initialize to empty array of reservations
 
     // Hook to retrieve book list from Firebase
     useEffect(() => {
@@ -32,6 +33,7 @@ const Collection = ({ navigation }) => {
                 });
             
                 setBooks(retrievedBooks);
+                
                 setLoading(false);
             });        
         return () => subscriber(); // Unsubscribe from events when no longer in use
@@ -39,20 +41,6 @@ const Collection = ({ navigation }) => {
 
     if (loading) {
         return <ActivityIndicator />;
-    }
-
-    const renderBookCard = ({ item }) => {
-
-        return (
-            <TouchableOpacity onPress = {() =>
-                navigation.navigate('Book Record', { item })
-            }>
-                <View style = { styles.listItem }>
-                    <Text>Title: { item.title }</Text>
-                    <Text>Synopsis: { item.synopsis }</Text>
-                </View>
-            </TouchableOpacity>
-        )
     }
 
     // REACT-DATA-GRID-COMMUNITY code
@@ -147,9 +135,8 @@ const Collection = ({ navigation }) => {
 
     ];
   
-    // define grid styles here
+    // define grid styles
     const gridStyle = { minHeight: 550 };
-
 
     return (
         

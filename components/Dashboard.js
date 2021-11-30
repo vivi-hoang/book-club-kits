@@ -6,6 +6,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase/app';
 import { loggingOut } from '../firebase/FirebaseHelpers';
 
+// Table dependencies
+import ReactDataGrid from '@inovua/reactdatagrid-community'
+import '@inovua/reactdatagrid-community/index.css'
+
 import styles from '../styling/Styles';
 
 // Destructure navigation; passed as a property to the component.
@@ -70,6 +74,8 @@ const Dashboard = ({ navigation }) => {
                         key: documentSnapshot.id
                     });
                 });
+
+                createReservationList(retrievedBooks);
             
                 setBooks(retrievedBooks);
                 setLoading(false);
@@ -121,6 +127,120 @@ const Dashboard = ({ navigation }) => {
                 </View>
             </TouchableOpacity>
         )
+    }
+
+    // Create an array holding all reservation info
+    const createReservationList = (bookList) => {
+        
+        const reservationList = [];
+
+        // Iterate through each book on booklist
+        bookList.forEach((book) => {
+            
+            // Iterate through each reservations entry
+            for (let i = 0; i < book.reservations.length; i++) {
+                let reservation = {
+                    title: book.title,
+                    authorFirstName: book.authorFirstName,
+                    authorLastName: book.authorLastName,
+                    startDate: book.reservations[i].dates[0],
+                    endDate: book.reservations[i].dates[20],
+                    patronFirstName: book.reservations[i].patronFirstName,
+                    patronLastName: book.reservations[i].patronLastName,
+                    patronEmail: book.reservations[i].patronEmail,
+                    patronPhone: book.reservations[i].patronPhone,
+                }
+                reservationList.push(reservation);
+            }       
+        })
+        console.log(reservationList);
+        return reservationList;
+        
+    }
+    
+    // REACT-DATA-GRID-COMMUNITY code
+    // define columns
+    const columns = [
+        {   
+            name: 'title', 
+            header: 'Title',
+            //group: 'book',
+            width: 200,
+        },
+        { 
+            name: 'authorFirstName', 
+            header: 'Author First Name',
+            //group: 'author',        
+            width: 120,
+        },
+        { 
+            name: 'authorLastName', 
+            header: 'Author Last Name',
+            //group: 'author',
+            width: 120,
+        },
+        {
+            name: 'startDate',
+            header: 'Start Date',
+            width: 100,
+        },
+        {
+            name: 'endDate',
+            header: 'End Date',
+            width: 100,
+        },
+        { 
+            name: 'patronFirstName', 
+            header: 'Patron First Name',
+            //group: 'author',        
+            width: 120,
+        },
+        { 
+            name: 'patronLastName', 
+            header: 'Patron Last Name',
+            //group: 'author',
+            width: 120,
+        },
+        { 
+            name: 'patronPhone', 
+            header: 'Patron Phone',
+            //group: 'author',        
+            width: 100,
+        },
+        { 
+            name: 'patronEmail', 
+            header: 'Patron Email',
+            //group: 'author',
+            width: 100,
+        },
+    ];
+
+    // define grid styles
+    const gridStyle = { minHeight: 550 };
+
+    // Display reservation list as a table
+    const renderAllReservations = () => {
+
+        return (
+        
+            <View style = {styles.container}>
+                <View style = {styles.titleContainer}>
+                    <Text style = {styles.title}>BOOK CLUB KIT COLLECTION</Text>
+                </View>
+                
+                <ReactDataGrid
+                    idProperty="id"
+                    columns = { columns }
+                    groups = { groups }
+                    dataSource = { books }
+                    style = { gridStyle }
+                    defaultFilterValue = { filterValue }
+                />
+    
+            </View>
+    
+        );
+
     }
 
     // Display different dashboard based on user role
