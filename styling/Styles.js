@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         textAlign: 'center',
-        marginTop: 20,
+        marginTop: 15,
+        marginBottom: 10,
     },
     listItem: {
         marginTop: 10,

@@ -171,62 +171,128 @@ const Dashboard = ({ navigation }) => {
         {   
             name: 'title', 
             header: 'Title',
-            //group: 'book',
-            width: 200,
+            group: 'book',
+            width: 175,
         },
         { 
             name: 'authorFirstName', 
-            header: 'Author First Name',
-            //group: 'author',        
-            width: 120,
+            header: 'First Name',
+            group: 'book',        
+            width: 110,
         },
         { 
             name: 'authorLastName', 
-            header: 'Author Last Name',
-            //group: 'author',
-            width: 120,
+            header: 'Last Name',
+            group: 'book',
+            width: 110,
         },
         {
             name: 'startDate',
             header: 'Start Date',
+            group: 'checkout',
             width: 100,
         },
         {
             name: 'endDate',
             header: 'End Date',
+            group: 'checkout',
             width: 100,
         },
         { 
             name: 'patronFirstName', 
-            header: 'Patron First Name',
-            //group: 'author',        
-            width: 120,
+            header: 'First Name',
+            group: 'checkout',        
+            width: 110,
         },
         { 
             name: 'patronLastName', 
-            header: 'Patron Last Name',
-            //group: 'author',
-            width: 120,
+            header: 'Last Name',
+            group: 'checkout',
+            width: 110,
         },
         { 
             name: 'patronPhone', 
-            header: 'Patron Phone',
-            //group: 'author',        
+            header: 'Phone',
+            group: 'checkout',        
             width: 100,
         },
         { 
             name: 'patronEmail', 
-            header: 'Patron Email',
-            //group: 'author',
-            width: 100,
+            header: 'Email',
+            group: 'checkout',
+            width: 200,
         },
         { 
             name: 'pickupLibrary', 
             header: 'Pickup Library',
-            //group: 'author',
-            width: 100,
+            group: 'checkout',
+            defaultFlex: 100,
         },
     ];
+
+    const groups = [
+        { name: 'book', header: 'Book and Author' },
+        { name: 'checkout', header: 'Patron Checkout Details' }
+    ];
+
+    const filterValue = [
+        {
+            name: 'title',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'authorFirstName',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'authorLastName',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'startDate',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'endDate',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'patronFirstName',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'patronLastName',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'patronPhone',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'patronEmail',
+            operator: 'contains',
+            type: 'string',
+        },
+        {
+            name: 'pickupLibrary',
+            operator: 'contains',
+            type: 'string',
+        }
+    ];
+
+    // Sort by start date by default
+    const defaultSortInfo = { 
+        name: 'startDate',
+        dir: 1,
+    }
 
     // define grid styles
     const gridStyle = { minHeight: 550 };
@@ -237,12 +303,13 @@ const Dashboard = ({ navigation }) => {
         return (        
                 
             <ReactDataGrid
-                idProperty = "id"
+                idProperty = 'id'
                 columns = { columns }
-                //groups = { groups }
+                groups = { groups }
                 dataSource = { reservationList }
                 style = { gridStyle }
-                //defaultFilterValue = { filterValue }
+                defaultFilterValue = { filterValue }
+                defaultSortInfo={defaultSortInfo}
             />    
     
         );
