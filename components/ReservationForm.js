@@ -73,6 +73,7 @@ const ReservationForm = ({ navigation, route }) => {
             patronID: patronID,
             patronPhone: patronPhone,
             patronEmail: patronEmail,
+            pickupLibrary: pickupLibrary,
         }        
 
         return reservationObj;

@@ -13,9 +13,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         textAlign: 'center',
-    },
-    text: {
-
+        marginTop: 20,
     },
     listItem: {
         marginTop: 10,
@@ -43,15 +41,6 @@ const styles = StyleSheet.create({
     buttonText: {
         fontWeight: 'bold',
         color: 'white',
-    },
-    inlineText: {
-
-    },
-    textInput: {
-
-    },
-    formInput: {
-
     },
 });
 

@@ -24,6 +24,7 @@ const Dashboard = ({ navigation }) => {
     // For displaying book club kit collection
     const [loading, setLoading] = useState(true); // Set to true on component mount
     const [books, setBooks] = useState([]); // Initialize to empty array of books
+    const [reservationList, setReservationList] = useState([]); // Initialize to empty array of reservations
   
     // Retrieves user info from Firebase
     useEffect(() => {
@@ -75,7 +76,8 @@ const Dashboard = ({ navigation }) => {
                     });
                 });
 
-                createReservationList(retrievedBooks);
+                const retrievedReservations = createReservationList(retrievedBooks);
+                setReservationList(retrievedReservations);
             
                 setBooks(retrievedBooks);
                 setLoading(false);
@@ -139,7 +141,12 @@ const Dashboard = ({ navigation }) => {
             
             // Iterate through each reservations entry
             for (let i = 0; i < book.reservations.length; i++) {
+
+                // generate unique id for each reservation; this is needed for React Data Grid
+                const reservationID = reservationList.length;
+
                 let reservation = {
+                    id: reservationID, 
                     title: book.title,
                     authorFirstName: book.authorFirstName,
                     authorLastName: book.authorLastName,
@@ -149,13 +156,13 @@ const Dashboard = ({ navigation }) => {
                     patronLastName: book.reservations[i].patronLastName,
                     patronEmail: book.reservations[i].patronEmail,
                     patronPhone: book.reservations[i].patronPhone,
+                    pickupLibrary: book.reservations[i].pickupLibrary,
                 }
                 reservationList.push(reservation);
             }       
         })
         console.log(reservationList);
-        return reservationList;
-        
+        return reservationList;        
     }
     
     // REACT-DATA-GRID-COMMUNITY code
@@ -213,6 +220,12 @@ const Dashboard = ({ navigation }) => {
             //group: 'author',
             width: 100,
         },
+        { 
+            name: 'pickupLibrary', 
+            header: 'Pickup Library',
+            //group: 'author',
+            width: 100,
+        },
     ];
 
     // define grid styles
@@ -221,23 +234,16 @@ const Dashboard = ({ navigation }) => {
     // Display reservation list as a table
     const renderAllReservations = () => {
 
-        return (
-        
-            <View style = {styles.container}>
-                <View style = {styles.titleContainer}>
-                    <Text style = {styles.title}>BOOK CLUB KIT COLLECTION</Text>
-                </View>
+        return (        
                 
-                <ReactDataGrid
-                    idProperty="id"
-                    columns = { columns }
-                    groups = { groups }
-                    dataSource = { books }
-                    style = { gridStyle }
-                    defaultFilterValue = { filterValue }
-                />
-    
-            </View>
+            <ReactDataGrid
+                idProperty = "id"
+                columns = { columns }
+                //groups = { groups }
+                dataSource = { reservationList }
+                style = { gridStyle }
+                //defaultFilterValue = { filterValue }
+            />    
     
         );
 
@@ -273,6 +279,11 @@ const Dashboard = ({ navigation }) => {
                     >
                         <Text style = { styles.buttonText }>Create Kit Record</Text>
                     </TouchableOpacity>
+
+                    <View style = {styles.titleContainer}>
+                        <Text style = {styles.title}>ALL RESERVATIONS</Text>
+                    </View>
+                    { renderAllReservations() }
                 </View>
             );
         }
@@ -288,6 +299,11 @@ const Dashboard = ({ navigation }) => {
                     >
                         <Text style = { styles.buttonText }>Manage Users</Text>
                     </TouchableOpacity>
+
+                    <View style = {styles.titleContainer}>
+                        <Text style = {styles.title}>ALL RESERVATIONS</Text>
+                    </View>
+                    { renderAllReservations() }
                 </View>
             );
         }
